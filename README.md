@@ -119,40 +119,57 @@ Truy cập Dashboard tại `http://localhost:8501`.
 ## 7. Cấu trúc Thư mục Dự án
 ```text
 .
-├── app.py                     # Entrypoint Dashboard Streamlit (Xử lý 3 trạng thái)
-├── run_pipeline.py            # Entrypoint chạy Pipeline ETL 1 lệnh duy nhất
-├── requirements.txt           # Danh mục thư viện có khóa phiên bản cố định (==)
-├── Dockerfile                 # Đóng gói Docker container
-├── docker-compose.yml         # Khởi chạy toàn bộ hệ thống bằng Docker Compose
-├── .env.example               # Biến môi trường mẫu
-├── .gitignore                 # Loại trừ file tạm, cache, .env và file CSDL lớn
-├── README.md                  # Tài liệu hướng dẫn cài đặt và kiểm thử
+├── app.py                         # Entrypoint Dashboard Streamlit (Xử lý 3 trạng thái + Login NFR3)
+├── run_pipeline.py                # Entrypoint chạy Pipeline ETL 1 lệnh duy nhất
+├── requirements.txt               # Danh mục thư viện có khóa phiên bản cố định (==)
+├── Dockerfile                     # Đóng gói Docker container
+├── docker-compose.yml             # Khởi chạy toàn bộ hệ thống bằng Docker Compose
+├── .env.example                   # Biến môi trường mẫu
+├── .gitignore                     # Loại trừ file tạm, cache, .env và file CSDL lớn
+├── README.md                      # Tài liệu hướng dẫn cài đặt và kiểm thử
+├── BT2_2374802010259_MaiTuanKiet.pdf # File PDF báo cáo chính thức nộp bài BT2
+├── ho_so_bt1/                     # Toàn bộ hồ sơ tài liệu và báo cáo Bài tập 1 (BT1)
+│   ├── BT1_DA_L6_2374802010259_MaiTuanKiet.pdf
+│   ├── HO_SO_BT1_HOAN_CHINH.md
+│   ├── HO_SO_BT1_HOAN_CHINH.html
+│   ├── build_bt1_pdf.ps1
+│   ├── BAO_CAO_BUOI_4.md
+│   └── BAO_CAO_BUOI_5.md
+├── ho_so_bt2/                     # Toàn bộ hồ sơ tài liệu và báo cáo Bài tập 2 (BT2)
+│   ├── BT2_2374802010259_MaiTuanKiet.pdf
+│   ├── HO_SO_BT2_HOAN_CHINH.md
+│   ├── HO_SO_BT2_HOAN_CHINH.html
+│   └── build_bt2_pdf.ps1
 ├── data/
-│   ├── raw/                   # Dữ liệu CSV thô nguồn của 24 cửa hàng
-│   └── dwh_mekong.duckdb      # Kho dữ liệu DuckDB Star Schema
-├── seeds/                     # Dữ liệu hạt giống khởi tạo (stores, products, orders, items)
-│   └── generate_seeds.py      # Script sinh dữ liệu mẫu giả lập
+│   ├── raw/                       # Dữ liệu CSV thô nguồn của 24 cửa hàng
+│   └── dwh_mekong.duckdb          # Kho dữ liệu DuckDB Star Schema
+├── seeds/                         # Dữ liệu hạt giống khởi tạo (stores, products, orders, items)
+│   └── generate_seeds.py          # Script sinh dữ liệu mẫu giả lập
 ├── sql/
-│   └── schema.sql             # Script DDL tạo các bảng Dimension, Fact, Reject, Audit
-├── src/                       # Mã nguồn tách lớp chuẩn theo Track DA
-│   ├── extract/               # Pha 1: Trích xuất dữ liệu từ các file CSV
+│   └── schema.sql                 # Script DDL tạo các bảng Dimension, Fact, Reject, Audit
+├── src/                           # Mã nguồn tách lớp chuẩn theo Track DA
+│   ├── extract/                   # Pha 1: Trích xuất dữ liệu từ các file CSV
 │   │   └── extractor.py
-│   ├── quality/               # Pha kiểm soát chất lượng dữ liệu (6 hàm đo lường)
+│   ├── quality/                   # Pha kiểm soát chất lượng dữ liệu (6 hàm đo lường)
 │   │   └── checker.py
-│   ├── transform/             # Pha 2: Làm sạch, chuẩn hóa ngày ISO, che SĐT, gắn mã Dim/Fact
+│   ├── transform/                 # Pha 2: Làm sạch, chuẩn hóa ngày ISO, che SĐT, gắn mã Dim/Fact
 │   │   └── transformer.py
-│   ├── load/                  # Pha 3: Nạp dữ liệu vào DuckDB với cơ chế Idempotent
+│   ├── load/                      # Pha 3: Nạp dữ liệu vào DuckDB với cơ chế Idempotent
 │   │   └── loader.py
-│   ├── pipeline.py            # Bộ điều phối Pipeline (Orchestrator)
+│   ├── pipeline.py                # Bộ điều phối Pipeline (Orchestrator)
 │   └── dashboard/
 │       └── app.py
-├── tests/                     # Bộ kiểm thử tự động pytest
-│   └── test_pipeline.py       # 4 test cases: Luồng đúng, Biên, Dữ liệu sai, Idempotent
-└── docs/                      # Hồ sơ tài liệu
-    ├── srs.md                 # Đặc tả yêu cầu phần mềm từ BT1
-    ├── data-requirements.md   # Đặc tả dữ liệu chuyên ngành DA
-    ├── thay-doi-thiet-ke.md   # Bản ghi nhận 3 thay đổi thiết kế so với BT1
-    ├── ai-disclosure.md       # Bảng khai báo công cụ AI và cam kết học thuật (BT2)
-    ├── architecture-thuc-te.md # Sơ đồ kiến trúc đã hiện thực thực tế
-    └── architecture-thuc-te.drawio # File thiết kế Draw.io gốc
+├── tests/                         # Bộ kiểm thử tự động pytest
+│   └── test_pipeline.py           # 4 test cases: Luồng đúng, Biên, Dữ liệu sai, Idempotent
+└── docs/                          # Hồ sơ đặc tả và sơ đồ thiết kế
+    ├── srs.md                     # Đặc tả yêu cầu phần mềm từ BT1
+    ├── data-requirements.md       # Đặc tả dữ liệu chuyên ngành DA
+    ├── thay-doi-thiet-ke.md       # Bản ghi nhận 3 thay đổi thiết kế so với BT1
+    ├── ai-disclosure.md           # Bảng khai báo công cụ AI và cam kết học thuật (BT2)
+    ├── architecture-thuc-te.md     # Sơ đồ kiến trúc đã hiện thực thực tế
+    ├── architecture-thuc-te.drawio # File thiết kế Draw.io gốc
+    ├── usecase-specification.md   # Đặc tả chi tiết 6 use case và ranh giới hệ thống
+    ├── usecase.drawio             # Sơ đồ Use Case chuẩn UML
+    ├── erd.drawio                 # Sơ đồ ERD Star Schema
+    └── wireframe.drawio           # Sơ đồ Wireframe Dashboard
 ```
