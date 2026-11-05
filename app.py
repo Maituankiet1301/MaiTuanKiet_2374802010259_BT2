@@ -166,8 +166,16 @@ min_max_date = conn.execute("SELECT MIN(full_date), MAX(full_date) FROM dim_date
 # Bộ lọc trên Sidebar
 st.sidebar.subheader("🔍 Bộ lọc phân tích")
 
-# Lọc cửa hàng
-store_options = ["Tất cả 24 cửa hàng"] + [f"{r['store_id']} - {r['store_name']}" for _, r in df_stores_list.iterrows()]
+# Lọc cửa hàng (kết hợp phân quyền NFR3)
+if st.session_state.store:
+    assigned_store = st.session_state.store
+    store_row = df_stores_list[df_stores_list["store_id"] == assigned_store]
+    store_label = f"{assigned_store} - {store_row['store_name'].values[0]}" if not store_row.empty else assigned_store
+    store_options = [store_label]
+    st.sidebar.info(f"🔒 Phân quyền NFR3: Bạn chỉ xem số liệu chi nhánh **{assigned_store}**")
+else:
+    store_options = ["Tất cả 24 cửa hàng"] + [f"{r['store_id']} - {r['store_name']}" for _, r in df_stores_list.iterrows()]
+
 selected_store_option = st.sidebar.selectbox("Chi nhánh cửa hàng:", store_options)
 
 # Lọc khoảng thời gian

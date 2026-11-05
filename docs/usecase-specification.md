@@ -6,20 +6,33 @@
 ---
 
 ## 1. SƠ ĐỒ USE CASE TỔNG QUAN
-- **File sơ đồ gốc:** [docs/usecase.drawio](file:///c:/Users/Admin/OneDrive/B%C3%A1o%20C%C3%A1o%20Bu%E1%BB%95i%204/docs/usecase.drawio) (Vẽ trên Draw.io, tuân thủ chuẩn UML).
+- **File sơ đồ gốc:** [docs/usecase.drawio](usecase.drawio) (Vẽ trên Draw.io, tuân thủ chuẩn UML).
+- **Xem trước ảnh:** ![Sơ đồ Use Case](usecase.png)
 - **Ranh giới hệ thống:** Hệ thống Kho dữ liệu bán hàng và Báo cáo doanh thu Mekong Mobile.
 - **Tác nhân (Actors):**
   1. *Kỹ sư dữ liệu (Data Engineer):* Người quản trị pipeline ETL và kho dữ liệu.
   2. *Hệ thống lập lịch (Cron Scheduler):* Tác nhân thời gian tự động kích hoạt pipeline lúc 02:00 sáng.
   3. *Quản lý cửa hàng (Store Manager):* Người xem báo cáo doanh thu chi nhánh phụ trách.
   4. *Giám đốc kinh doanh / Ban giám đốc (Business Director):* Người xem báo cáo tổng hợp 24 chi nhánh.
-- **Danh sách 6 Use Case:**
+- **Danh sách 6 Use Case trong phạm vi (>= 5 UC theo tiêu chuẩn):**
   - UC1: Trích xuất và nạp dữ liệu từ 24 cửa hàng vào Staging.
   - UC2: Làm sạch, chuẩn hóa và kiểm tra chất lượng dữ liệu.
   - UC3: Nạp dữ liệu vào mô hình kho dữ liệu (Fact & Dimensions).
   - UC4: Xem dashboard doanh thu theo ngày và tháng của cửa hàng.
   - UC5: Phân tích doanh thu đa chiều theo nhóm sản phẩm theo quý.
   - UC6: Báo cáo so sánh cửa hàng & Cảnh báo sụt giảm 3 tháng liên tiếp.
+
+### 1.1. Chú thích Sơ đồ (Use Case Legend)
+- **Hình người que (Stick Figure):** Tác nhân người dùng tương tác trực tiếp với giao diện hệ thống (Kỹ sư dữ liệu, Quản lý cửa hàng, Ban giám đốc).
+- **Hình bánh răng / khối hệ thống:** Tác nhân hệ thống tự động (Hệ thống lập lịch Cron Scheduler).
+- **Hình elip nét liền:** Chức năng / Use case cốt lõi nằm hoàn toàn trong phạm vi hiện thực hóa của dự án.
+- **Khung chữ nhật nét liền:** Ranh giới hệ thống phân tích Mekong Mobile (System Boundary).
+- **Đường nối nét liền:** Mối quan hệ tương tác trực tiếp giữa Actor và Use case.
+
+### 1.2. Các chức năng Ngoài phạm vi Hệ thống (Out of Scope)
+- **Thanh toán tại quầy (POS Checkout):** Thuộc phân hệ bán lẻ trực tiếp tại cửa hàng.
+- **Quản lý vị trí kệ kho vật lý:** Thuộc phân hệ Quản lý Kho bãi.
+- **Gửi tin nhắn SMS / OTT tự động:** Chủ ý không làm ở phiên bản này (Won't Have) để bảo đảm nguồn lực.
 
 ---
 

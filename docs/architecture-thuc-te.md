@@ -82,7 +82,26 @@ flowchart TD
 
 ---
 
-## 2. Vị trí các thành phần trong Thư mục Dự án
+## 2. Chú thích Sơ đồ Kiến trúc (Architecture Legend)
+
+- **Khối chữ nhật viền nét liền:** Các module xử lý logic nghiệp vụ tách lớp (Extract, Quality, Transform, Load, Presentation).
+- **Khối bo tròn / Thư mục:** Các tệp bảng tính nguồn CSV và bảng cơ sở dữ liệu DuckDB (Dimensions, Fact, Rejects).
+- **Mũi tên nét liền (`-->`):** Luồng dữ liệu chuyển tiếp tuần tự giữa các pha trong Pipeline ETL.
+- **Mũi tên nét đứt (`-.->`):** Truy vấn tổng hợp dữ liệu OLAP SQL từ Dashboard Streamlit đến kho DuckDB.
+
+---
+
+## 3. Các thành phần Ngoài phạm vi Hệ thống (Out of Scope / Won't Have)
+
+Theo thỏa thuận phân ranh giới kiến trúc và ma trận MoSCoW:
+1. **Hệ thống thanh toán / POS trực tiếp tại quầy:** Không xây dựng cổng thanh toán POS; hệ thống chỉ tiếp nhận dữ liệu kết xuất định kỳ từ các cửa hàng.
+2. **Quản lý tồn kho vật lý tại từng kệ hàng:** Thuộc trách nhiệm của phân hệ Quản lý Kho, nằm ngoài phạm vi kho dữ liệu bán hàng L6.
+3. **Dịch vụ gửi tin nhắn SMS / OTT thông báo doanh thu:** Ghi nhận ở mức Won't Have để tập trung nguồn lực vào chất lượng dữ liệu và dashboard phân tích.
+4. **Hạ tầng phân tán Apache Airflow / Cloud Kubernetes:** Sẽ được mở rộng ở Bài tập 3 (buổi 13–16) và Chuyên đề tốt nghiệp 2; phiên bản BT2 tập trung hoàn thiện pipeline cục bộ tái lập được 100%.
+
+---
+
+## 4. Vị trí các thành phần trong Thư mục Dự án
 
 | Thành phần kiến trúc | Tệp mã nguồn thực tế | Trách nhiệm và Chức năng chính |
 | :--- | :--- | :--- |

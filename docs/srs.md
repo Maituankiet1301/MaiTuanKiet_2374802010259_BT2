@@ -1,4 +1,4 @@
-﻿# BẢN ĐẶC TẢ YÊU CẦU PHẦN MỀM RÚT GỌN (SRS)
+# BẢN ĐẶC TẢ YÊU CẦU PHẦN MỀM RÚT GỌN (SRS)
 **Dự án:** Hệ thống Smart CRM – Mekong Mobile  
 **Phân hệ / Luồng nghiệp vụ:** L6 – Kho dữ liệu bán hàng và báo cáo doanh thu  
 **Sinh viên thực hiện:** Mai Tuấn Kiệt | **MSSV:** 2374802010259 | **Track:** Data Analytics (DA)  
@@ -15,6 +15,11 @@ Mekong Mobile là chuỗi bán lẻ thiết bị di động và phụ kiện v�
 ### 1.2. Luồng nghiệp vụ lựa chọn
 - **Tên luồng:** Luồng L6 – Xây dựng kho dữ liệu bán hàng tập trung và dashboard báo cáo doanh thu đa chiều.
 - **Mục tiêu hệ thống:** Tự động hóa quá trình trích xuất dữ liệu bán hàng từ 24 cửa hàng, làm sạch và xử lý các lỗi chất lượng dữ liệu, mô hình hóa dữ liệu theo lược đồ hình sao (Star Schema) và xây dựng dashboard phân tích kinh doanh trực quan hỗ trợ ra quyết định.
+- **Hồ sơ thiết kế & sơ đồ đính kèm:**
+  - *Sơ đồ Use Case:* [docs/usecase.drawio](usecase.drawio) (Xem trước: `docs/usecase.png`)
+  - *Sơ đồ ERD Star Schema:* [docs/erd.drawio](erd.drawio) (Xem trước: `docs/erd.png`)
+  - *Sơ đồ Wireframe giao diện:* [docs/wireframe.drawio](wireframe.drawio) (Xem trước: `docs/wireframe.png`)
+  - *Sơ đồ Kiến trúc thực tế:* [docs/architecture-thuc-te.drawio](architecture-thuc-te.drawio) (Xem trước: `docs/architecture-thuc-te.md`)
 
 ### 1.3. Phạm vi và các điều chủ ý KHÔNG làm (WON'T Have - MoSCoW)
 - **Trong phạm vi:**

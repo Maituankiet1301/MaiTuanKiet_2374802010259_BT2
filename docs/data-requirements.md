@@ -75,6 +75,8 @@ Dữ liệu đầu vào được thu thập từ hệ thống bán lẻ phân t�
 > **"Một dòng trong bảng `fact_sales` đại diện cho MỘT MẶT HÀNG (SẢN PHẨM) nằm trong MỘT ĐƠN HÀNG được bán tại MỘT CỬA HÀNG vào MỘT NGÀY cụ thể."**
 
 ### 5.2. Hệ quả thiết kế lược đồ kho dữ liệu (Star Schema)
+- **Sơ đồ ERD kho dữ liệu:** [docs/erd.drawio](erd.drawio) (Vẽ trên Draw.io)
+- **Ảnh xem trước:** ![Lược đồ ERD Star Schema](erd.png)
 - **Bảng Fact:** `fact_sales`
   - **Khóa chính đại diện (Surrogate Primary Key):** `sales_fact_key` (hoặc khóa kết hợp `order_id, product_key`)
   - **Khóa ngoại tham chiếu các chiều:**
