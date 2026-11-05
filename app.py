@@ -10,6 +10,7 @@ Framework: Streamlit + Plotly + DuckDB
    - Đang truy vấn / Đang tải (Loading)
    - Bộ lọc không ra dòng nào / Dữ liệu rỗng (Empty - phân biệt rõ 2 trường hợp)
    - Lỗi kết nối kho dữ liệu (Error - KHÔNG in chuỗi kết nối / mật khẩu, có nút thử lại)
+4. Xác thực đăng nhập cơ bản (3 vai trò: admin, manager, dataeng).
 """
 
 import os
@@ -27,6 +28,48 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# ==============================================================================
+# XÁC THỰC ĐĂNG NHẬP CƠ BẢN (Authentication - yêu cầu thành phần 3)
+# ==============================================================================
+# Danh sách tài khoản hệ thống (trong thực tế sẽ lưu DB với mật khẩu băm)
+USERS = {
+    "admin":    {"password": "admin123",    "role": "Giám đốc kinh doanh", "store": None},
+    "manager1": {"password": "manager123",  "role": "Quản lý cửa hàng",    "store": "CH01"},
+    "dataeng":  {"password": "data123",     "role": "Kỹ sư dữ liệu",      "store": None},
+}
+
+def check_login():
+    """Xác thực đăng nhập cơ bản bằng session_state của Streamlit."""
+    if "authenticated" not in st.session_state:
+        st.session_state.authenticated = False
+        st.session_state.username = ""
+        st.session_state.role = ""
+        st.session_state.store = None
+
+    if not st.session_state.authenticated:
+        st.markdown("## 🔐 Đăng nhập hệ thống Mekong Mobile Dashboard")
+        st.caption("Vui lòng nhập tài khoản để truy cập hệ thống báo cáo doanh thu.")
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            with st.form("login_form"):
+                username = st.text_input("👤 Tên đăng nhập", placeholder="admin / manager1 / dataeng")
+                password = st.text_input("🔑 Mật khẩu", type="password", placeholder="Nhập mật khẩu")
+                submitted = st.form_submit_button("Đăng nhập", use_container_width=True)
+                if submitted:
+                    user = USERS.get(username)
+                    if user and user["password"] == password:
+                        st.session_state.authenticated = True
+                        st.session_state.username = username
+                        st.session_state.role = user["role"]
+                        st.session_state.store = user["store"]
+                        st.rerun()
+                    else:
+                        st.error("❌ Sai tên đăng nhập hoặc mật khẩu. Vui lòng thử lại.")
+            st.info("**Tài khoản demo:** admin / admin123 · manager1 / manager123 · dataeng / data123")
+        st.stop()
+
+check_login()
 
 # Đường dẫn cơ sở dữ liệu
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -52,6 +95,16 @@ st.sidebar.image("https://img.icons8.com/color/96/shop--v1.png", width=64)
 st.sidebar.title("Mekong Mobile L6")
 st.sidebar.caption("Kho dữ liệu bán hàng & Báo cáo doanh thu")
 st.sidebar.markdown("**Sinh viên:** Mai Tuấn Kiệt (2374802010259)")
+st.sidebar.markdown("---")
+
+# Hiển thị thông tin người dùng đã đăng nhập
+st.sidebar.markdown(f"👤 **{st.session_state.username}** ({st.session_state.role})")
+if st.sidebar.button("🚪 Đăng xuất"):
+    st.session_state.authenticated = False
+    st.session_state.username = ""
+    st.session_state.role = ""
+    st.session_state.store = None
+    st.rerun()
 st.sidebar.markdown("---")
 
 # Toggle kiểm thử trạng thái cho giảng viên chấm điểm

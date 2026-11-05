@@ -1,4 +1,4 @@
-﻿# Smart CRM Mekong Mobile – Luồng L6: Kho Dữ Liệu Bán Hàng & Báo Cáo Doanh Thu (Bài Tập 2)
+# Smart CRM Mekong Mobile – Luồng L6: Kho Dữ Liệu Bán Hàng & Báo Cáo Doanh Thu (Bài Tập 2)
 
 **Học phần:** Chuyên đề tốt nghiệp 1 – Học kỳ 1, Năm học 2026 – 2027  
 **Sinh viên thực hiện:** Mai Tuấn Kiệt  
@@ -60,6 +60,15 @@ python run_pipeline.py
 streamlit run app.py
 ```
 *(Mở trình duyệt tại địa chỉ: `http://localhost:8501` để xem giao diện)*
+
+### Bước 6: Đăng nhập vào Dashboard
+Hệ thống yêu cầu xác thực trước khi xem báo cáo. Sử dụng một trong các tài khoản demo sau:
+
+| Tên đăng nhập | Mật khẩu | Vai trò | Phạm vi xem |
+|---|---|---|---|
+| `admin` | `admin123` | Giám đốc kinh doanh | Toàn bộ 24 chi nhánh |
+| `manager1` | `manager123` | Quản lý cửa hàng | Cửa hàng CH01 |
+| `dataeng` | `data123` | Kỹ sư dữ liệu | Toàn bộ hệ thống + ETL |
 
 ---
 
