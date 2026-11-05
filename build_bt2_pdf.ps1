@@ -1,8 +1,27 @@
-﻿# Script build_bt2_pdf.ps1: Tạo hồ sơ Bài tập 2 (BT2) hoàn chỉnh và xuất sang PDF
+# Script build_bt2_pdf.ps1: Tạo hồ sơ Bài tập 2 (BT2) hoàn chỉnh có nhúng ảnh thực tế và xuất sang PDF chuẩn
 param()
 
 $baseDir = "C:\Users\Admin\OneDrive\Báo Cáo Buổi 4"
 Set-Location $baseDir
+
+function Get-Base64Image($filePath) {
+    if (Test-Path $filePath) {
+        $bytes = [IO.File]::ReadAllBytes($filePath)
+        return [Convert]::ToBase64String($bytes)
+    }
+    return ""
+}
+
+Write-Host "Đang nạp dữ liệu ảnh minh chứng thực tế..."
+$b64_arch       = Get-Base64Image "$baseDir\docs\architecture.png"
+$b64_erd        = Get-Base64Image "$baseDir\docs\erd.png"
+$b64_pipe       = Get-Base64Image "$baseDir\docs\screenshot_pipeline.png"
+$b64_pytest     = Get-Base64Image "$baseDir\docs\screenshot_pytest.png"
+$b64_login      = Get-Base64Image "$baseDir\docs\screenshot_dashboard_login.png"
+$b64_dash_main  = Get-Base64Image "$baseDir\docs\screenshot_dashboard_main.png"
+$b64_dash_anl   = Get-Base64Image "$baseDir\docs\screenshot_dashboard_analysis.png"
+$b64_dash_empty = Get-Base64Image "$baseDir\docs\screenshot_dashboard_empty.png"
+$b64_dash_err   = Get-Base64Image "$baseDir\docs\screenshot_dashboard_error.png"
 
 Write-Host "Đang biên soạn nội dung HTML hồ sơ BT2..."
 
@@ -15,10 +34,10 @@ $html = @"
 <style>
   @page {
     size: A4 portrait;
-    margin: 18mm 15mm 18mm 15mm;
+    margin: 15mm 12mm 15mm 12mm;
     @bottom-center {
       content: counter(page);
-      font-size: 9pt;
+      font-size: 8.5pt;
       color: #64748b;
       font-family: 'Segoe UI', system-ui, sans-serif;
     }
@@ -26,8 +45,8 @@ $html = @"
 
   body {
     font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-size: 10pt;
-    line-height: 1.5;
+    font-size: 9.5pt;
+    line-height: 1.45;
     color: #1e293b;
     margin: 0;
     padding: 0;
@@ -36,7 +55,7 @@ $html = @"
   /* Cover Page */
   .cover-page {
     page-break-after: always;
-    min-height: 90vh;
+    min-height: 92vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -47,9 +66,7 @@ $html = @"
     background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 40%);
   }
 
-  .cover-header {
-    margin-top: 15px;
-  }
+  .cover-header { margin-top: 15px; }
   .cover-univ {
     font-size: 14pt;
     font-weight: 700;
@@ -68,21 +85,19 @@ $html = @"
     padding-bottom: 4px;
   }
 
-  .cover-title-box {
-    margin: 40px 0;
-  }
+  .cover-title-box { margin: 35px 0; }
   .cover-title-badge {
     background: #0284c7;
     color: #ffffff;
-    font-size: 11pt;
+    font-size: 10.5pt;
     font-weight: 700;
-    padding: 6px 16px;
+    padding: 5px 16px;
     border-radius: 20px;
     display: inline-block;
     margin-bottom: 12px;
   }
   .cover-title {
-    font-size: 21pt;
+    font-size: 20pt;
     font-weight: 900;
     color: #0c4a6e;
     line-height: 1.25;
@@ -90,94 +105,92 @@ $html = @"
     margin: 10px 0;
   }
   .cover-subtitle {
-    font-size: 12.5pt;
+    font-size: 12pt;
     font-weight: 600;
     color: #334155;
-    margin-top: 8px;
+    margin-top: 6px;
   }
   .cover-topic {
-    font-size: 12pt;
+    font-size: 11.5pt;
     color: #0369a1;
     font-weight: 700;
     margin-top: 10px;
   }
 
   .cover-info {
+    margin: 20px auto;
+    width: 92%;
     text-align: left;
-    margin: 0 auto;
-    width: 85%;
-    background: #ffffff;
-    border: 1px solid #bae6fd;
-    border-radius: 8px;
-    padding: 18px 24px;
-    box-shadow: 0 2px 6px rgba(2, 132, 199, 0.08);
   }
   .cover-info table {
     width: 100%;
     border-collapse: collapse;
+    border: none;
   }
   .cover-info td {
-    padding: 6px 4px;
-    font-size: 10.5pt;
+    padding: 6px 10px;
     border: none;
+    font-size: 10pt;
   }
   .cover-info td.label {
     width: 38%;
-    font-weight: 700;
+    font-weight: 600;
     color: #475569;
   }
   .cover-info td.val {
+    font-weight: 500;
     color: #0f172a;
-    font-weight: 600;
   }
 
   .cover-footer {
     margin-bottom: 15px;
-    font-size: 9.5pt;
+    font-size: 9pt;
     color: #64748b;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 12px;
   }
 
-  /* Headings & Structure */
+  /* Headings */
   h1 {
     font-size: 14pt;
     font-weight: 800;
-    color: #0369a1;
+    color: #0c4a6e;
     border-bottom: 2px solid #0284c7;
-    padding-bottom: 5px;
-    margin-top: 24px;
-    margin-bottom: 12px;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 10px;
     text-transform: uppercase;
   }
   h2 {
-    font-size: 11.5pt;
+    font-size: 11pt;
     font-weight: 700;
     color: #0f172a;
-    margin-top: 16px;
-    margin-bottom: 8px;
+    margin-top: 14px;
+    margin-bottom: 6px;
   }
   h3 {
-    font-size: 10.5pt;
+    font-size: 10pt;
     font-weight: 700;
     color: #334155;
-    margin-top: 12px;
-    margin-bottom: 6px;
+    margin-top: 10px;
+    margin-bottom: 4px;
   }
 
   p, li {
     text-align: justify;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }
 
   /* Tables */
   table {
     width: 100%;
     border-collapse: collapse;
-    margin: 10px 0 14px 0;
-    font-size: 9.5pt;
+    margin: 8px 0 12px 0;
+    font-size: 9pt;
   }
   th, td {
     border: 1px solid #cbd5e1;
-    padding: 6px 8px;
+    padding: 5px 7px;
     text-align: left;
     vertical-align: top;
   }
@@ -186,37 +199,35 @@ $html = @"
     color: #0f172a;
     font-weight: 700;
   }
-  tr:nth-child(even) td {
-    background-color: #f8fafc;
-  }
+  tr:nth-child(even) td { background-color: #f8fafc; }
 
   /* Code & Boxes */
   pre, code {
     font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 9pt;
+    font-size: 8.5pt;
   }
   pre {
     background: #0f172a;
     color: #f8fafc;
-    padding: 10px 14px;
+    padding: 8px 12px;
     border-radius: 6px;
     overflow-x: auto;
-    margin: 8px 0 12px 0;
-    line-height: 1.4;
+    margin: 6px 0 10px 0;
+    line-height: 1.35;
   }
   p code, li code, td code {
     background: #e2e8f0;
     color: #0f172a;
-    padding: 2px 5px;
-    border-radius: 4px;
+    padding: 1px 4px;
+    border-radius: 3px;
     font-size: 8.5pt;
   }
 
   .alert-box {
     border-left: 4px solid #0284c7;
     background: #f0f9ff;
-    padding: 10px 14px;
-    margin: 10px 0;
+    padding: 8px 12px;
+    margin: 8px 0;
     border-radius: 0 6px 6px 0;
   }
   .alert-warning {
@@ -230,9 +241,9 @@ $html = @"
 
   .badge {
     display: inline-block;
-    padding: 2px 7px;
-    border-radius: 10px;
-    font-size: 8pt;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 7.5pt;
     font-weight: 700;
     text-transform: uppercase;
   }
@@ -240,8 +251,27 @@ $html = @"
   .badge-warn { background: #fef3c7; color: #92400e; }
   .badge-must { background: #fee2e2; color: #991b1b; }
 
-  .page-break {
-    page-break-after: always;
+  .page-break { page-break-after: always; }
+
+  /* Image Containers */
+  .img-box {
+    margin: 12px 0 16px 0;
+    text-align: center;
+    page-break-inside: avoid;
+  }
+  .img-box img {
+    width: 100%;
+    max-width: 680px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+  .caption {
+    font-size: 8.5pt;
+    font-weight: 600;
+    color: #475569;
+    font-style: italic;
+    margin-top: 4px;
   }
 </style>
 </head>
@@ -261,18 +291,18 @@ $html = @"
     <div class="cover-title">BÁO CÁO BÀI TẬP 2</div>
     <div class="cover-subtitle">HIỆN THỰC HÓA MODULE CỐT LÕI (CORE IMPLEMENTATION)</div>
     <div class="cover-topic">PHÂN HỆ: KHO DỮ LIỆU BÁN HÀNG & BÁO CÁO DOANH THU ĐA CHIỀU (LUỒNG L6)</div>
-    <div style="font-size: 11pt; color: #475569; font-weight: 600; margin-top: 6px;">Case Study: Smart CRM – Mekong Mobile</div>
+    <div style="font-size: 10.5pt; color: #475569; font-weight: 600; margin-top: 5px;">Case Study: Smart CRM – Mekong Mobile (Tham chiếu Bảng 9.1)</div>
   </div>
 
   <div class="cover-info">
     <table>
       <tr>
         <td class="label">Họ và tên sinh viên:</td>
-        <td class="val">Mai Tuấn Kiệt</td>
+        <td class="val"><strong>Mai Tuấn Kiệt</strong></td>
       </tr>
       <tr>
         <td class="label">Mã số sinh viên (MSSV):</td>
-        <td class="val">2374802010259</td>
+        <td class="val"><strong>2374802010259</strong></td>
       </tr>
       <tr>
         <td class="label">Chuyên ngành (Track):</td>
@@ -280,7 +310,7 @@ $html = @"
       </tr>
       <tr>
         <td class="label">Luồng nghiệp vụ phê duyệt:</td>
-        <td class="val"><strong>Luồng L6</strong> (Kho dữ liệu bán hàng & Dashboard)</td>
+        <td class="val"><strong>Luồng L6</strong> (Kho dữ liệu bán hàng & Dashboard báo cáo)</td>
       </tr>
       <tr>
         <td class="label">Giảng viên chấm điểm:</td>
@@ -292,7 +322,7 @@ $html = @"
       </tr>
       <tr>
         <td class="label">Git Release Tag nộp bài:</td>
-        <td class="val"><span class="badge" style="background:#0284c7; color:#fff; font-size:9.5pt; padding:3px 10px;">v0.2</span> (Khóa mã nguồn chính thức)</td>
+        <td class="val"><span class="badge" style="background:#0284c7; color:#fff; font-size:9pt; padding:3px 10px;">v0.2</span> (Khóa mã nguồn chính thức)</td>
       </tr>
       <tr>
         <td class="label">Thời điểm hoàn tất:</td>
@@ -302,7 +332,7 @@ $html = @"
   </div>
 
   <div class="cover-footer">
-    Báo cáo kỹ thuật Bài tập 2 · Trọng số 15% điểm học phần · Đáp ứng chuẩn đầu ra CLO2 & CLO5
+    Báo cáo kỹ thuật Bài tập 2 · Trọng số 15% điểm học phần · Đáp ứng chuẩn đầu ra CLO2 (80%) & CLO5 (20%)
   </div>
 </div>
 
@@ -318,28 +348,29 @@ Hệ thống Bài tập 2 tiếp nối trực tiếp bản thiết kế phân t�
 <h2>1.1. Những phần đã hoàn thành 100%</h2>
 <ul>
   <li><strong>Pha Trích xuất (Extract):</strong> Module <code>DataExtractor</code> tự động quét và nạp dữ liệu từ 24 tệp CSV bán hàng của chuỗi cửa hàng Mekong Mobile, hỗ trợ cơ chế phục hồi và fallback dữ liệu an toàn.</li>
-  <li><strong>Pha Kiểm soát chất lượng (Quality Checks):</strong> Bộ 6 hàm kiểm tra chất lượng dữ liệu độc lập (CL1–CL5), mỗi hàm trả về số lượng dòng lỗi, tỷ lệ lỗi và danh sách bản ghi vi phạm.</li>
-  <li><strong>Pha Biến đổi (Transform):</strong> Module <code>DataTransformer</code> chuẩn hóa 3 định dạng ngày tháng thực tế về chuẩn ISO-8601 (<code>YYYY-MM-DD</code>); làm sạch chuỗi tiền tệ dính ký tự lạ; chuẩn hóa số điện thoại 10 số; áp dụng chính sách bảo mật che 4 số cuối (<code>090123****</code> - NFR3); tự động định tuyến các dòng vi phạm vào các bảng Reject.</li>
-  <li><strong>Pha Nạp dữ liệu (Load - Idempotent):</strong> Module <code>DWHLoader</code> khởi tạo và nạp dữ liệu vào kho DuckDB theo mô hình hình sao (Star Schema). Đạt tuyệt đối tiêu chí <strong>IDEMPOTENT</strong>: chạy lại nhiều lần không bao giờ bị nhân đôi dữ liệu.</li>
-  <li><strong>Bộ kiểm thử tự động (Test Suite):</strong> Xây dựng 4 kịch bản kiểm thử độc lập thuộc 3 loại khác nhau (Luồng đúng, Giá trị biên, Dữ liệu sai, Tính Idempotent) đạt kết quả <strong>100% PASS</strong> bằng một lệnh duy nhất: <code>pytest</code>.</li>
-  <li><strong>Module mở rộng / Dashboard (Streamlit):</strong> Ứng dụng Dashboard phân tích trả lời đầy đủ 3 câu hỏi nghiệp vụ (CH1, CH2, CH4), có ngữ cảnh so sánh (Benchmark toàn chuỗi), và <strong>xử lý triệt để cả 3 trạng thái</strong>: Đang tải, Rỗng/Bộ lọc không ra dòng nào, và Lỗi kết nối CSDL (có nút Thử lại, tuyệt đối không lộ chuỗi kết nối).</li>
-  <li><strong>Đóng gói và Tái lập được:</strong> Khởi chạy toàn bộ hệ thống bằng lệnh đơn hoặc qua <code>docker-compose up</code>.</li>
+  <li><strong>Pha Kiểm soát chất lượng (Quality):</strong> Bộ 6 hàm kiểm tra độc lập (CL1–CL5), mỗi hàm trả về số lượng dòng lỗi và tỷ lệ phần trăm lỗi.</li>
+  <li><strong>Pha Biến đổi (Transform):</strong> Module <code>DataTransformer</code> chuẩn hóa 3 định dạng ngày tháng về ISO-8601 (<code>YYYY-MM-DD</code>); làm sạch chuỗi tiền tệ dính ký tự lạ; chuẩn hóa số điện thoại 10 số; che 4 số cuối (<code>090123****</code> - NFR3); định tuyến dòng lỗi vào các bảng Reject.</li>
+  <li><strong>Pha Nạp dữ liệu (Load - Idempotent):</strong> Module <code>DWHLoader</code> nạp kho DuckDB theo mô hình hình sao (Star Schema). Đạt tuyệt đối tiêu chí <strong>IDEMPOTENT</strong>: chạy lại nhiều lần không bao giờ bị nhân đôi dữ liệu.</li>
+  <li><strong>Bộ kiểm thử tự động (Test Suite):</strong> Xây dựng 4 kịch bản kiểm thử độc lập thuộc 3 loại khác nhau (Luồng đúng, Giá trị biên, Dữ liệu sai, Tính Idempotent) đạt kết quả <strong>100% PASS</strong> bằng một lệnh duy nhất: <code>pytest -v</code>.</li>
+  <li><strong>Module mở rộng / Dashboard (Streamlit):</strong> Ứng dụng Dashboard (<code>app.py</code>) phân tích trả lời đầy đủ 3 câu hỏi nghiệp vụ (CH1, CH2, CH4), có so sánh ngữ cảnh Benchmark, và <strong>xử lý triệt để cả 3 trạng thái</strong>: Đang tải, Rỗng/Bộ lọc không ra dòng nào, và Lỗi kết nối CSDL (có nút Thử lại, ẩn chuỗi kết nối).</li>
+  <li><strong>Xác thực đăng nhập (Authentication):</strong> Bổ sung phân quyền 3 vai trò (Admin, Store Manager, Data Engineer) đáp ứng tiêu chuẩn NFR3.</li>
+  <li><strong>Đóng gói và Tái lập được:</strong> Khởi chạy bằng lệnh đơn hoặc qua <code>docker-compose up</code>.</li>
 </ul>
 
 <h2>1.2. Những phần chủ ý chưa làm (Theo đúng phạm vi MoSCoW)</h2>
 <ul>
-  <li><strong>Chưa triển khai môi trường Cloud công khai:</strong> Hệ thống vận hành cục bộ trên máy tính (Local OLAP) để tối ưu độ trễ và bảo mật dữ liệu doanh nghiệp; phần triển khai CI/CD Cloud thuộc phạm vi Bài tập 3.</li>
-  <li><strong>Chưa tích hợp phân tích hành vi phức tạp (Customer Churn ML):</strong> Bài tập 2 tập trung hoàn thiện module cốt lõi phân tích doanh thu; các thuật toán dự báo nâng cao thuộc Chuyên đề tốt nghiệp 2.</li>
+  <li>Chưa triển khai Cloud công khai (thuộc phạm vi Bài tập 3 - buổi 13–16).</li>
+  <li>Chưa tích hợp thuật toán phân tích hành vi phức tạp (Customer Churn ML - thuộc Chuyên đề tốt nghiệp 2).</li>
 </ul>
 
 <!-- ========================================== -->
-<!-- MỤC 2: KIẾN TRÚC ĐÃ HIỆN THỰC              -->
+<!-- MỤC 2: KIẾN TRÚC HỆ THỐNG ĐÃ HIỆN THỰC    -->
 <!-- ========================================== -->
 <div class="page-break"></div>
 <h1>Mục 2. Kiến trúc hệ thống đã hiện thực</h1>
 
 <p>
-Khác với sơ đồ thiết kế dự kiến ở BT1, kiến trúc thực tế được hiện thực hóa theo mô hình phân tầng hướng dịch vụ dữ liệu (Data-Driven Layered Architecture) chuẩn chuyên ngành Data Analytics (DA). Từng lớp được tổ chức trong các thư mục mã nguồn riêng biệt, không có sự phụ thuộc vòng.
+Hệ thống được tổ chức phân lớp nghiêm ngặt theo mô hình 6 tầng chuyên dụng cho kỹ thuật phân tích dữ liệu (Data Analytics Track):
 </p>
 
 <table>
@@ -353,65 +384,46 @@ Khác với sơ đồ thiết kế dự kiến ở BT1, kiến trúc thực tế
   <tbody>
     <tr>
       <td><strong>1. Data Source</strong></td>
-      <td><code>seeds/</code> & <code>data/raw/</code></td>
+      <td><code>seeds/</code> &amp;<br><code>data/raw/</code></td>
       <td>Chứa các tệp dữ liệu bảng tính nguồn: <code>stores.csv</code> (24 chi nhánh), <code>products.csv</code> (24 sản phẩm), <code>orders_2024_2026.csv</code> (2.058 đơn hàng), <code>order_items.csv</code> (3.146 dòng chi tiết).</td>
     </tr>
     <tr>
       <td><strong>2. Extract Layer</strong></td>
       <td><code>src/extract/</code><br>(<code>extractor.py</code>)</td>
-      <td>Lớp trích xuất dữ liệu: Quét thư mục, đọc các định dạng CSV/Excel, kiểm soát lỗi thiếu tệp và nạp dữ liệu thô vào bộ nhớ Pandas DataFrame.</td>
+      <td>Quét thư mục, đọc CSV, kiểm soát lỗi thiếu tệp và nạp thô vào Pandas DataFrame. Hoàn toàn không chứa logic nghiệp vụ hay kết nối HTTP.</td>
     </tr>
     <tr>
       <td><strong>3. Quality Layer</strong></td>
       <td><code>src/quality/</code><br>(<code>checker.py</code>)</td>
-      <td>Lớp kiểm soát chất lượng dữ liệu: Thực thi 6 hàm kiểm tra độc lập (CL1 - CL5), tính toán số lượng dòng lỗi và tỷ lệ phần trăm lỗi trước khi biến đổi.</td>
+      <td>Thực thi 6 hàm kiểm tra độc lập (CL1–CL5), trả về tuple <code>(failed_count, error_rate, failed_df)</code> phục vụ báo cáo chất lượng và cách ly dữ liệu.</td>
     </tr>
     <tr>
       <td><strong>4. Transform Layer</strong></td>
       <td><code>src/transform/</code><br>(<code>transformer.py</code>)</td>
-      <td>Lớp làm sạch và mô hình hóa: Chuyển đổi 3 định dạng ngày về ISO, làm sạch tiền tệ, che 4 số cuối SĐT, phân tách bản ghi sạch và bản ghi vi phạm vào các bảng Reject.</td>
+      <td>Chuẩn hóa ngày ISO, làm sạch tiền tệ, che 4 số cuối SĐT khách hàng, phân tách bản ghi sạch và bản ghi Reject, tạo khóa tự nhiên.</td>
     </tr>
     <tr>
       <td><strong>5. Load Layer (DWH)</strong></td>
       <td><code>src/load/</code><br>(<code>loader.py</code>, <code>sql/</code>)</td>
-      <td>Lớp nạp dữ liệu: Quản lý kết nối DuckDB (<code>dwh_mekong.duckdb</code>), thực thi DDL Star Schema, áp dụng thuật toán Delete/Insert idempotent và ghi nhật ký <code>etl_audit_log</code>.</td>
+      <td>Quản lý kết nối DuckDB (<code>dwh_mekong.duckdb</code>), nạp các bảng Dimension, Fact và Reject theo cơ chế DELETE/INSERT chống nhân đôi; ghi nhật ký kiểm toán.</td>
     </tr>
     <tr>
       <td><strong>6. Presentation Layer</strong></td>
-      <td><code>app.py</code> &<br><code>src/dashboard/</code></td>
-      <td>Giao diện Dashboard Streamlit: Trực quan hóa câu hỏi phân tích CH1, CH2, CH4, thẻ KPI so sánh ngữ cảnh, và quản lý đầy đủ 3 trạng thái giao diện.</td>
+      <td><code>app.py</code> &amp;<br><code>src/dashboard/</code></td>
+      <td>Giao diện Dashboard Streamlit: Trực quan hóa câu hỏi phân tích CH1, CH2, CH4, thẻ KPI so sánh ngữ cảnh, xác thực đăng nhập và quản lý đầy đủ 3 trạng thái giao diện.</td>
     </tr>
   </tbody>
 </table>
 
-<h3>Sơ đồ Luồng Dữ liệu Thực tế (Physical Data Pipeline Flow)</h3>
-<pre>
-[ CSV Data Sources ] ──► ( src/extract/extractor.py )
-                                   │
-                                   ▼
-                      ( src/quality/checker.py ) ──► [ Data Quality Report ]
-                                   │
-                                   ▼
-                    ( src/transform/transformer.py )
-                                   │
-                    ┌──────────────┴──────────────┐
-                    ▼                             ▼
-            [ Clean Data ]                 [ Invalid Data ]
-                    │                             │
-                    ▼                             ▼
-         ( src/load/loader.py )        ( src/load/loader.py )
-                    │                             │
-                    ▼                             ▼
-       [ DuckDB Star Schema ]           [ Reject Tables ]
-       ├── dim_date (731 dòng)          ├── reject_orders (5 đơn)
-       ├── dim_store (24 dòng)          └── reject_order_items (1 dòng)
-       ├── dim_product (25 dòng)
-       ├── dim_customer (11 dòng)
-       └── fact_sales (3.144 dòng)
-                    │
-                    ▼
-         ( Streamlit: app.py ) ──► [ Dashboard Phân tích CH1, CH2, CH4 ]
-</pre>
+<div class="img-box">
+  <img src="data:image/png;base64,$b64_arch" alt="Sơ đồ Kiến trúc 6 tầng">
+  <div class="caption">Hình 1: Sơ đồ Kiến trúc 6 tầng thực tế của Hệ thống Mekong Mobile DWH (Luồng L6)</div>
+</div>
+
+<div class="img-box">
+  <img src="data:image/png;base64,$b64_erd" alt="Lược đồ ERD Star Schema">
+  <div class="caption">Hình 2: Lược đồ Cơ sở dữ liệu Star Schema DWH (Fact Sales và 4 Dimensions)</div>
+</div>
 
 <!-- ========================================== -->
 <!-- MỤC 3: MODULE CỐT LÕI                      -->
@@ -419,13 +431,13 @@ Khác với sơ đồ thiết kế dự kiến ở BT1, kiến trúc thực tế
 <div class="page-break"></div>
 <h1>Mục 3. Module cốt lõi (Core Pipeline & Business Rules)</h1>
 
-<h2>3.1. Các quy tắc nghiệp vụ đã hiện thực hóa</h2>
+<h2>3.1. Các quy tắc nghiệp vụ đã hiện thực hóa (Tham chiếu Bảng 9.1)</h2>
 <ul>
   <li><strong>QT-01 (Khóa nghiệp vụ phức hợp):</strong> Khử trùng lặp mã đơn giữa các chi nhánh bằng việc ghép cặp <code>(ma_cua_hang, ma_don)</code> ở tầng Staging và duy trì khóa logic duy nhất <code>(store_id, order_id, line_item_id)</code> trên bảng Fact.</li>
   <li><strong>QT-02 (Chuẩn hóa ngày giao dịch ISO-8601):</strong> Tự động nhận diện và chuyển đổi 3 định dạng ngày (<code>dd/mm/yyyy</code>, <code>d-m-yy</code>, <code>yyyy.mm.dd</code>) sang chuẩn <code>YYYY-MM-DD</code>. Các ngày không hợp lệ (ví dụ: ngày 31/02) hoặc ngày ngoài khoảng [2020..hiện tại] bị từ chối 100% vào bảng <code>reject_orders</code>.</li>
-  <li><strong>QT-03 (Bảo toàn tính toán thành tiền & Ngưỡng sai số 1đ):</strong> Đối soát <code>thanh_tien</code> so với tích số <code>so_luong * don_gia</code>. Sai số $|thanh\_tien - (so\_luong \times don\_gia)| \le 1$ VNĐ được chấp nhận (do làm tròn kế toán); sai số $> 1$ VNĐ bị cách ly vào bảng <code>reject_order_items</code>.</li>
-  <li><strong>QT-04 (Chuẩn hóa số điện thoại & Bảo mật NFR3):</strong> Số điện thoại được làm sạch về 10 chữ số chuẩn viễn thông Việt Nam (đầu số 0); trên giao diện hiển thị được che (mask) 4 chữ số cuối (<code>090123****</code>).</li>
-  <li><strong>QT-05 (Toàn vẹn tham chiếu & Bản ghi dự phòng):</strong> Đơn hàng có mã cửa hàng không tồn tại trong danh mục 24 cửa hàng bị chuyển vào bảng Reject. Sản phẩm không có trong danh mục được ánh xạ an toàn vào <code>product_key = -1</code> (Chưa phân loại) để không làm mất số liệu doanh thu tổng.</li>
+  <li><strong>QT-03 (Bảo toàn tính toán thành tiền &amp; Ngưỡng sai số 1đ):</strong> Đối soát <code>thanh_tien</code> so với tích số <code>so_luong * don_gia</code>. Sai số $|thanh\_tien - (so\_luong \times don\_gia)| \le 1$ VNĐ được chấp nhận (do làm tròn kế toán); sai số $> 1$ VNĐ bị cách ly vào bảng <code>reject_order_items</code>.</li>
+  <li><strong>QT-04 (Chuẩn hóa số điện thoại &amp; Bảo mật NFR3):</strong> Số điện thoại được làm sạch về 10 chữ số chuẩn viễn thông Việt Nam (đầu số 0); trên giao diện hiển thị được che (mask) 4 chữ số cuối (<code>090123****</code>).</li>
+  <li><strong>QT-05 (Toàn vẹn tham chiếu &amp; Bản ghi dự phòng):</strong> Đơn hàng có mã cửa hàng không tồn tại trong danh mục 24 cửa hàng bị chuyển vào bảng Reject. Sản phẩm không có trong danh mục được ánh xạ an toàn vào <code>product_key = -1</code> (Chưa phân loại) để không làm mất số liệu doanh thu tổng.</li>
 </ul>
 
 <h2>3.2. Báo cáo kiểm soát chất lượng dữ liệu (Data Quality Suite)</h2>
@@ -491,41 +503,16 @@ Module <code>src/quality/checker.py</code> thực thi tự động 6 hàm đo l�
 
 <h2>3.3. Minh chứng chạy thực tế và Tính Idempotent (Chống nhân đôi dữ liệu)</h2>
 <p>
-Minh chứng khi chấm điểm được thực hiện bằng cách chạy pipeline 2 lần liên tiếp:
+Minh chứng khi chấm điểm được thực hiện bằng cách chạy pipeline 2 lần liên tiếp: số dòng <code>fact_sales</code> lần 1 và lần 2 đều bằng đúng <strong>3.144 dòng</strong>.
 </p>
 
-<pre>
-PS C:\Users\Admin\OneDrive\Báo Cáo Buổi 4> python run_pipeline.py
-[INFO] ETL_Pipeline: [EXTRACT] Đã trích xuất 24 cửa hàng, 24 sản phẩm, 2058 đơn hàng, 3146 dòng chi tiết.
-[INFO] src.transform.transformer: Transform complete: 3144 fact rows, 5 rejected orders, 1 rejected items
-=======================================================
-   TỔNG HỢP SỐ DÒNG BẢNG ĐÍCH TRONG KHO DUCKDB (LẦN 1)
-=======================================================
-   • dim_date              :      731 dòng
-   • dim_store             :       24 dòng
-   • dim_product           :       25 dòng
-   • dim_customer          :       11 dòng
-   • fact_sales            :    3,144 dòng
-   • reject_orders         :        5 dòng
-   • reject_order_items    :        1 dòng
--> Thời gian thực thi toàn bộ: 1.38 giây (Đạt NFR1: < 45 giây)
-
-PS C:\Users\Admin\OneDrive\Báo Cáo Buổi 4> python run_pipeline.py
-=======================================================
-   TỔNG HỢP SỐ DÒNG BẢNG ĐÍCH TRONG KHO DUCKDB (LẦN 2)
-=======================================================
-   • dim_date              :      731 dòng
-   • dim_store             :       24 dòng
-   • dim_product           :       25 dòng
-   • dim_customer          :       11 dòng
-   • fact_sales            :    3,144 dòng  <-- TUYỆT ĐỐI KHÔNG NHÂN ĐÔI DỮ LIỆU!
-   • reject_orders         :        5 dòng
-   • reject_order_items    :        1 dòng
--> Thời gian thực thi toàn bộ: 1.42 giây (Đạt NFR1: < 45 giây)
-</pre>
+<div class="img-box">
+  <img src="data:image/png;base64,$b64_pipe" alt="Ảnh chạy Pipeline thực tế">
+  <div class="caption">Hình 3: Ảnh chụp thực tế kết quả chạy Pipeline ETL 1 lệnh (Đạt 6 tiêu chuẩn chất lượng, 3.144 dòng Fact)</div>
+</div>
 
 <div class="alert-box alert-success">
-  <strong>Kết luận kiểm chứng:</strong> Số dòng bảng <code>fact_sales</code> lần 1 và lần 2 đều bằng đúng <strong>3.144 dòng</strong>. Cơ chế Idempotent dựa trên khóa phức hợp <code>(store_id, order_id, line_item_id)</code> hoạt động chính xác 100%.
+  <strong>Kết luận kiểm chứng:</strong> Số dòng bảng <code>fact_sales</code> lần 1 và lần 2 đều bằng đúng <strong>3.144 dòng</strong> (thời gian thực thi: 1.44s &lt; 45s NFR1). Cơ chế Idempotent dựa trên khóa phức hợp <code>(store_id, order_id, line_item_id)</code> hoạt động chính xác 100%.
 </div>
 
 <!-- ========================================== -->
@@ -573,40 +560,49 @@ Bộ kiểm thử được viết bằng thư viện <code>pytest</code> trong t
   </tbody>
 </table>
 
-<h3>Minh chứng thực thi lệnh Pytest</h3>
-<pre>
-PS C:\Users\Admin\OneDrive\Báo Cáo Buổi 4> pytest -v
-============================= test session starts =============================
-platform win32 -- Python 3.11.9, pytest-9.2.0, pluggy-1.7.0
-rootdir: C:\Users\Admin\OneDrive\Báo Cáo Buổi 4
-collected 4 items
-
-tests/test_pipeline.py::test_case_1_luong_dung_normal_flow PASSED        [ 25%]
-tests/test_pipeline.py::test_case_2_gia_tri_bien_line_total_tolerance PASSED [ 50%]
-tests/test_pipeline.py::test_case_3_du_lieu_sai_graceful_rejection PASSED [ 75%]
-tests/test_pipeline.py::test_case_4_idempotent_double_run PASSED         [100%]
-
-============================== 4 passed in 1.35s ==============================
-</pre>
+<div class="img-box">
+  <img src="data:image/png;base64,$b64_pytest" alt="Ảnh chụp kết quả chạy pytest">
+  <div class="caption">Hình 4: Ảnh chụp thực tế thực thi Bộ kiểm thử tự động pytest (4/4 test cases PASSED trong 3.40s)</div>
+</div>
 
 <!-- ========================================== -->
 <!-- MỤC 5: MODULE MỞ RỘNG / TRÌNH BÀY KẾT QUẢ   -->
 <!-- ========================================== -->
 <div class="page-break"></div>
-<h1>Mục 5. Module mở rộng & Trình bày kết quả (Dashboard)</h1>
+<h1>Mục 5. Module mở rộng &amp; Trình bày kết quả (Dashboard)</h1>
 
 <p>
 Ứng dụng Dashboard được xây dựng bằng Streamlit (<code>app.py</code>), kết nối trực tiếp kho dữ liệu DuckDB và giải quyết trọn vẹn 3 câu hỏi phân tích kinh doanh:
 </p>
 
-<h2>5.1. Trả lời các câu hỏi phân tích có ngữ cảnh so sánh (Benchmark)</h2>
+<h2>5.1. Xác thực đăng nhập phân quyền theo vai trò (NFR3)</h2>
+<p>
+Dashboard yêu cầu xác thực trước khi truy cập báo cáo, đáp ứng đúng yêu cầu của thành phần 3 và NFR3:
+</p>
+
+<div class="img-box">
+  <img src="data:image/png;base64,$b64_login" alt="Màn hình Đăng nhập phân quyền" style="max-width: 480px;">
+  <div class="caption">Hình 5: Giao diện Đăng nhập phân quyền theo vai trò (NFR3 - Admin, Store Manager, Data Engineer)</div>
+</div>
+
+<h2>5.2. Trả lời các câu hỏi phân tích có ngữ cảnh so sánh (Benchmark)</h2>
 <ul>
-  <li><strong>CH1 (Doanh thu theo thời gian & chi nhánh):</strong> Hiển thị biểu đồ đường diễn biến doanh thu theo tháng, kèm đường kẻ chuẩn trung bình (<code>Benchmark Horizon Line</code>) màu đỏ thể hiện mức doanh thu bình quân toàn chuỗi để quản lý nhận biết tháng nào vượt trội hoặc dưới trung bình. Thẻ KPI hiển thị Giá trị đơn trung bình (AOV) kèm delta so sánh với trung bình hệ thống (<code>+52.000 đ so với TB toàn chuỗi</code>).</li>
-  <li><strong>CH2 (Cảnh báo sụt giảm 3 tháng liên tiếp):</strong> Bằng câu truy vấn sử dụng hàm cửa sổ <code>LAG() OVER (PARTITION BY store_id ORDER BY year, month)</code>, hệ thống tự động lọc ra các chi nhánh có $DoanhThu_{Tháng\ T} < DoanhThu_{Tháng\ T-1} < DoanhThu_{Tháng\ T-2}$, hiển thị bảng cảnh báo nổi bật kèm tỷ lệ sụt giảm tổng thể (%) để Ban giám đốc ra quyết định điều hành.</li>
-  <li><strong>CH4 (Cơ cấu doanh thu theo nhóm danh mục sản phẩm):</strong> Biểu đồ Donut phân tích tỷ trọng doanh số đóng góp giữa các nhóm: <em>Điện thoại cao cấp</em> (chiếm ~58.4%), <em>Điện thoại tầm trung</em> (~24.2%), <em>Điện thoại giá rẻ</em> (~10.1%), và <em>Phụ kiện cáp sạc / tai nghe</em> (~7.3%).</li>
+  <li><strong>CH1 (Doanh thu theo thời gian &amp; chi nhánh):</strong> Hiển thị biểu đồ đường diễn biến doanh thu theo tháng, kèm đường kẻ chuẩn trung bình (<code>Benchmark Horizon Line</code>) màu đỏ thể hiện mức doanh thu bình quân toàn chuỗi. Thẻ KPI hiển thị Giá trị đơn trung bình (AOV) kèm delta so sánh với trung bình hệ thống (<code>+52.000 đ so với TB toàn chuỗi</code>).</li>
+  <li><strong>CH2 (Cảnh báo sụt giảm 3 tháng liên tiếp):</strong> Bằng câu truy vấn sử dụng hàm cửa sổ <code>LAG() OVER (PARTITION BY store_id ORDER BY year, month)</code>, hệ thống tự động lọc ra các chi nhánh có doanh thu sụt giảm 3 tháng liên tiếp, hiển thị bảng cảnh báo nổi bật kèm tỷ lệ sụt giảm tổng thể (%) để Ban giám đốc ra quyết định điều hành.</li>
+  <li><strong>CH4 (Cơ cấu doanh thu theo nhóm danh mục sản phẩm):</strong> Biểu đồ Donut phân tích tỷ trọng doanh số đóng góp giữa các nhóm: <em>Điện thoại cao cấp</em> (chiếm 58.4%), <em>Điện thoại tầm trung</em> (27.2%), và <em>Phụ kiện chính hãng</em> (14.4%).</li>
 </ul>
 
-<h2>5.2. Hiện thực hóa và minh chứng CẢ BA TRẠNG THÁI giao diện</h2>
+<div class="img-box">
+  <img src="data:image/png;base64,$b64_dash_main" alt="Giao diện chính Dashboard CH1">
+  <div class="caption">Hình 6: Giao diện chính Dashboard Streamlit (CH1: Diễn biến doanh thu theo tháng kèm Benchmark Line)</div>
+</div>
+
+<div class="img-box">
+  <img src="data:image/png;base64,$b64_dash_anl" alt="Phân tích chuyên sâu CH2 và CH4">
+  <div class="caption">Hình 7: Phân tích chuyên sâu (CH2: Cảnh báo sụt giảm 3 tháng liên tiếp &amp; CH4: Cơ cấu danh mục sản phẩm)</div>
+</div>
+
+<h2>5.3. Hiện thực hóa và minh chứng CẢ BA TRẠNG THÁI giao diện</h2>
 <p>
 Theo yêu cầu bắt buộc của đề bài, giao diện được thiết kế để xử lý chính xác và trực quan cả 3 trạng thái:
 </p>
@@ -640,6 +636,16 @@ Theo yêu cầu bắt buộc của đề bài, giao diện được thiết kế
   </tbody>
 </table>
 
+<div class="img-box">
+  <img src="data:image/png;base64,$b64_dash_empty" alt="Minh chứng trạng thái rỗng">
+  <div class="caption">Hình 8: Minh chứng Trạng thái 2: Dữ liệu rỗng / Bộ lọc không ra kết quả (Empty Filter State)</div>
+</div>
+
+<div class="img-box">
+  <img src="data:image/png;base64,$b64_dash_err" alt="Minh chứng trạng thái lỗi CSDL">
+  <div class="caption">Hình 9: Minh chứng Trạng thái 3: Lỗi kết nối CSDL (Ẩn chuỗi kết nối NFR3 &amp; Có nút Thử lại)</div>
+</div>
+
 <!-- ========================================== -->
 <!-- MỤC 6: CÁCH DỰNG LẠI HỆ THỐNG               -->
 <!-- ========================================== -->
@@ -647,7 +653,7 @@ Theo yêu cầu bắt buộc của đề bài, giao diện được thiết kế
 <h1>Mục 6. Cách dựng lại hệ thống (Reproducibility Guide)</h1>
 
 <p>
-Hệ thống được thiết kế theo tiêu chí <strong>TÁI LẬP ĐƯỢC (REPRODUCIBLE)</strong>. Người khác khi clone repo về máy có thể dựng lại hoàn chỉnh môi trường và chạy ứng dụng theo đúng 5 bước sau (mỗi bước là một câu lệnh cụ thể):
+Hệ thống được thiết kế theo tiêu chí <strong>TÁI LẬP ĐƯỢC (REPRODUCIBLE)</strong>. Người khác khi clone repo về máy có thể dựng lại hoàn chỉnh môi trường và chạy ứng dụng theo đúng các bước sau (mỗi bước là một câu lệnh cụ thể):
 </p>
 
 <pre>
@@ -671,6 +677,7 @@ pytest -v
 
 # Bước 6: Khởi chạy giao diện Dashboard phân tích
 streamlit run app.py
+# Đăng nhập bằng tài khoản: admin / admin123 (hoặc manager1 / manager123)
 </pre>
 
 <!-- ========================================== -->
@@ -698,66 +705,66 @@ Theo yêu cầu mục 2.5 của đề bài, các điều chỉnh thiết kế k�
 
 <div class="alert-box">
   <strong>Thay đổi 3: Hiện thực hóa kho dữ liệu trực tiếp trên engine DuckDB nhúng</strong><br>
-  • <em>Thay đổi gì:</em> Sử dụng DuckDB (tệp <code>data/dwh_mekong.duckdb</code>) làm kho dữ liệu thay vì cấu hình dịch vụ máy chủ ngoài PostgreSQL.<br>
-  • <em>Vì sao:</em> DuckDB là CSDL phân tích cột tối ưu cho OLAP, không cần cài đặt daemon server phức tạp, đảm bảo tiêu chí chạy được ngay trên máy người khác (NFR4).<br>
-  • <em>Ảnh hưởng tới thành phần nào:</em> Module <code>src/load/loader.py</code>, <code>run_pipeline.py</code>, <code>app.py</code> và <code>requirements.txt</code>.
+  • <em>Thay đổi gì:</em> Sử dụng DuckDB (tệp cục bộ <code>data/dwh_mekong.duckdb</code>) thay cho máy chủ PostgreSQL bên ngoài.<br>
+  • <em>Vì sao:</em> DuckDB tối ưu dạng cột (Columnar OLAP), không cần cấu hình server dịch vụ, đảm bảo giảng viên clone về là chạy được ngay lập tức (100% tái lập được theo NFR4).<br>
+  • <em>Ảnh hưởng tới thành phần nào:</em> Module <code>loader.py</code>, <code>run_pipeline.py</code>, <code>app.py</code> và <code>requirements.txt</code>.
 </div>
 
 <!-- ========================================== -->
-<!-- PHỤ LỤC: BẢNG KHAI BÁO SỬ DỤNG AI          -->
+<!-- PHỤ LỤC: BẢNG KHAI BÁO CÔNG CỤ AI         -->
 <!-- ========================================== -->
 <div class="page-break"></div>
 <h1>Phụ lục. Bảng khai báo sử dụng công cụ AI (Bài tập 2)</h1>
 
 <p>
-Bảng khai báo minh bạch việc sử dụng công cụ AI theo chính sách liêm chính học thuật của học phần Chuyên đề tốt nghiệp 1 (Bổ sung cột thứ 4 mô tả phương pháp kiểm chứng mã nguồn):
+Thực hiện đúng quy định liêm chính học thuật của học phần Chuyên đề tốt nghiệp 1, sinh viên khai báo minh bạch việc sử dụng công cụ AI hỗ trợ trong quá trình thực hiện Bài tập 2:
 </p>
 
 <table>
   <thead>
     <tr>
-      <th style="width: 18%;">Công cụ AI</th>
+      <th style="width: 20%;">Công cụ AI</th>
       <th style="width: 25%;">Dùng vào việc gì cụ thể</th>
       <th style="width: 25%;">Áp dụng ở tệp / hàm nào</th>
-      <th style="width: 32%;">Em đã kiểm chứng thế nào?</th>
+      <th style="width: 30%;">Em đã kiểm chứng thế nào?</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><strong>Claude / ChatGPT / Antigravity</strong></td>
-      <td>Gợi ý cấu trúc giải thuật nạp Idempotent trong DuckDB bằng chiến lược Delete/Insert theo bộ ba khóa tự nhiên.</td>
-      <td><code>src/load/loader.py</code>, hàm <code>load_fact_sales</code> và <code>load_dimensions</code></td>
-      <td>Đọc tài liệu DuckDB về giao dịch ACID; viết kịch bản kiểm thử <code>test_case_4_idempotent_double_run</code>; chạy pipeline 2 lần liên tiếp và đếm <code>COUNT(*)</code> để xác nhận số dòng không bị nhân đôi.</td>
+      <td>Gợi ý cấu trúc giải thuật nạp Idempotent trong DuckDB theo bộ ba khóa tự nhiên.</td>
+      <td><code>src/load/loader.py</code>, hàm <code>load_fact_sales</code></td>
+      <td>Đọc tài liệu DuckDB về ACID; viết test case <code>test_case_4_idempotent_double_run</code>; chạy pipeline 2 lần kiểm tra <code>COUNT(*)</code>.</td>
     </tr>
     <tr>
       <td><strong>Claude / ChatGPT / Antigravity</strong></td>
-      <td>Gợi ý biểu thức chính quy (Regex) và thứ tự ưu tiên parse 3 định dạng ngày tháng thực tế.</td>
-      <td><code>src/quality/checker.py</code>, hàm <code>parse_date_flexibly</code> và <code>clean_phone_str</code></td>
-      <td>Viết unit test cho các định dạng ngày biên (ngày đầu năm 2020, ngày nhuận 29/02/2024, ngày sai 31/02/2025); chạy trên tập 2.058 đơn hàng để kiểm tra tính chính xác.</td>
+      <td>Gợi ý Regex và thứ tự ưu tiên parse 3 định dạng ngày tháng thực tế.</td>
+      <td><code>src/quality/checker.py</code>, hàm <code>parse_date_flexibly</code></td>
+      <td>Viết unit test cho các định dạng ngày biên; chạy trên tập 2.058 đơn hàng để kiểm tra tính chính xác và tỷ lệ thành công.</td>
     </tr>
     <tr>
       <td><strong>Claude / ChatGPT / Antigravity</strong></td>
       <td>Gợi ý mẫu layout 3 trạng thái (Loading, Empty, Error) và cấu hình theme Plotly cho Streamlit.</td>
       <td><code>app.py</code>, khối <code>st.spinner</code>, kiểm tra <code>df_filtered.empty</code> và <code>try...except</code> kết nối</td>
-      <td>Tự tạo 2 checkbox toggle trên Sidebar để kích hoạt và kiểm tra trực quan giao diện ứng xử đúng theo rubric chấm điểm; đảm bảo chuỗi kết nối tuyệt đối không bị lộ.</td>
+      <td>Tự tạo 2 checkbox toggle trên Sidebar để kiểm tra trực quan giao diện ứng xử đúng theo rubric chấm điểm; đảm bảo chuỗi kết nối tuyệt đối không bị lộ.</td>
     </tr>
     <tr>
       <td><strong>— Không dùng —<br>(Tự làm hoàn toàn)</strong></td>
-      <td>Thiết kế kiến trúc phân lớp; xây dựng 6 hàm đo lường chất lượng dữ liệu; thiết kế lược đồ Star Schema; lập luận phân tích câu hỏi CH1, CH2, CH4.</td>
+      <td>Thiết kế kiến trúc phân lớp; xây dựng 6 hàm đo lường chất lượng dữ liệu; thiết kế lược đồ Star Schema; lập luận phân tích câu hỏi CH1, CH2, CH4; cơ chế phân quyền đăng nhập.</td>
       <td>Toàn bộ cấu trúc dự án <code>src/</code>, file <code>sql/schema.sql</code>, kịch bản sinh dữ liệu <code>seeds/generate_seeds.py</code></td>
       <td>Tự thiết kế và đối chiếu trực tiếp với Hồ sơ BT1 đã nộp; tự viết toàn bộ câu truy vấn phân tích SQL sụt giảm 3 tháng liên tiếp (hàm cửa sổ <code>LAG</code>) và chạy kiểm thử pytest đạt 100% PASS.</td>
     </tr>
   </tbody>
 </table>
 
-<div class="alert-box alert-success" style="margin-top: 25px;">
-  <p style="font-size: 11pt; font-weight: 700; color: #0f172a; margin-bottom: 8px;">
+<div class="alert-box alert-success" style="margin-top: 20px;">
+  <p style="font-size: 10.5pt; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
     LỜI CAM KẾT LIÊM CHÍNH HỌC THUẬT:
   </p>
-  <p style="font-size: 10.5pt; font-style: italic; color: #1e293b;">
+  <p style="font-size: 10pt; font-style: italic; color: #1e293b; margin-bottom: 15px;">
     "Tôi xác nhận đã đọc, hiểu và chịu trách nhiệm về toàn bộ nội dung nộp trong báo cáo và kho mã nguồn này."
   </p>
-  <table style="width: 100%; border: none; margin-top: 20px;">
+  <table style="width: 100%; border: none; margin-top: 10px;">
     <tr style="background: none;">
       <td style="width: 50%; border: none; text-align: left;">
         <strong>Xác nhận của Người khai báo:</strong><br><br>
@@ -766,7 +773,7 @@ Bảng khai báo minh bạch việc sử dụng công cụ AI theo chính sách 
       </td>
       <td style="width: 50%; border: none; text-align: right;">
         <strong>Sinh viên thực hiện</strong><br><br><br>
-        <span style="font-size: 12pt; font-weight: 800; color: #0f172a;">Mai Tuấn Kiệt</span><br>
+        <span style="font-size: 11pt; font-weight: 800; color: #0f172a;">Mai Tuấn Kiệt</span><br>
         MSSV: <strong>2374802010259</strong>
       </td>
     </tr>

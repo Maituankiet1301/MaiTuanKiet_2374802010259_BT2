@@ -1,4 +1,4 @@
-﻿# BÁO CÁO BÀI TẬP 2 (BT2) — HIỆN THỰC HÓA MODULE CỐT LÕI
+# BÁO CÁO BÀI TẬP 2 (BT2) — HIỆN THỰC HÓA MODULE CỐT LÕI
 **Học phần:** Chuyên đề tốt nghiệp 1 – Học kỳ 1, Năm học 2026 – 2027  
 **Phân hệ / Luồng nghiệp vụ:** Luồng L6 – Kho dữ liệu bán hàng & Báo cáo doanh thu đa chiều  
 **Case Study:** Mekong Mobile Smart CRM  
@@ -31,6 +31,7 @@
 - **Pha Nạp dữ liệu (Load - Idempotent):** Module `DWHLoader` (`src/load/loader.py`) nạp kho DuckDB theo mô hình hình sao (Star Schema). Đạt tuyệt đối tiêu chí **IDEMPOTENT**: chạy lại nhiều lần không bao giờ bị nhân đôi dữ liệu.
 - **Bộ kiểm thử tự động (Test Suite):** Xây dựng 4 kịch bản kiểm thử độc lập thuộc 3 loại khác nhau (Luồng đúng, Giá trị biên, Dữ liệu sai, Tính Idempotent) đạt kết quả **100% PASS** bằng một lệnh duy nhất: `pytest`.
 - **Module mở rộng / Dashboard (Streamlit):** Ứng dụng Dashboard (`app.py`) phân tích trả lời đầy đủ 3 câu hỏi nghiệp vụ (CH1, CH2, CH4), có so sánh ngữ cảnh Benchmark, và **xử lý triệt để cả 3 trạng thái**: Đang tải, Rỗng/Bộ lọc không ra dòng nào, và Lỗi kết nối CSDL (có nút Thử lại, ẩn chuỗi kết nối).
+- **Xác thực đăng nhập cơ bản (Authentication):** Dashboard yêu cầu đăng nhập trước khi truy cập, hỗ trợ 3 vai trò: `admin` (Giám đốc – xem toàn bộ 24 chi nhánh), `manager1` (Quản lý cửa hàng – xem CH01), `dataeng` (Kỹ sư dữ liệu – quản trị ETL). Có nút Đăng xuất trên Sidebar.
 - **Đóng gói và Tái lập được:** Khởi chạy bằng lệnh đơn hoặc qua `docker-compose up`.
 
 ### 1.2. Những phần chủ ý chưa làm (Theo đúng phạm vi MoSCoW)
@@ -100,7 +101,16 @@ Chạy bằng một lệnh duy nhất: `pytest -v`
 - **CH2:** Bảng cảnh báo đỏ các chi nhánh sụt giảm 3 tháng liên tiếp tính bằng hàm cửa sổ `LAG()`, hiển thị mức % giảm.
 - **CH4:** Biểu đồ Donut phân bổ doanh số theo nhóm danh mục thiết bị và phụ kiện theo từng quý.
 
-### 5.2. Hiện thực hóa và minh chứng CẢ BA TRẠNG THÁI
+### 5.2. Xác thực đăng nhập cơ bản (Authentication)
+Dashboard yêu cầu xác thực trước khi truy cập, phân quyền theo vai trò:
+
+| Tài khoản | Mật khẩu | Vai trò | Phạm vi dữ liệu |
+|---|---|---|---|
+| `admin` | `admin123` | Giám đốc kinh doanh | Toàn bộ 24 chi nhánh |
+| `manager1` | `manager123` | Quản lý cửa hàng | Cửa hàng CH01 |
+| `dataeng` | `data123` | Kỹ sư dữ liệu | Toàn bộ hệ thống + ETL |
+
+### 5.3. Hiện thực hóa và minh chứng CẢ BA TRẠNG THÁI
 1. **Trạng thái Đang tải (Loading State):** `st.spinner("⏳ Đang thực thi truy vấn...")`.
 2. **Trạng thái Dữ liệu rỗng (Empty State):** Tích chọn toggle *"🟡 Giả lập Bộ lọc rỗng"* $\rightarrow$ Giao diện hiển thị cảnh báo bộ lọc không có dữ liệu phù hợp kèm nút Đặt lại bộ lọc.
 3. **Trạng thái Lỗi kết nối CSDL (Error State):** Tích chọn toggle *"🔴 Giả lập Lỗi kết nối CSDL"* $\rightarrow$ Giao diện hiển thị cảnh báo đỏ thân thiện, ẩn hoàn toàn chuỗi kết nối và mật khẩu, cung cấp nút Thử lại.
@@ -129,6 +139,7 @@ pytest -v
 
 # Bước 6: Khởi chạy Dashboard Streamlit
 streamlit run app.py
+# Đăng nhập bằng tài khoản: admin / admin123 (hoặc manager1 / manager123)
 ```
 
 ---
