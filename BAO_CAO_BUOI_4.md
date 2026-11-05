@@ -1,17 +1,17 @@
-# BÁO CÁO BUỔI 4 (THỰC HÀNH)
+﻿# BÁO CÁO BUỔI 4 (THỰC HÀNH)
 **Học phần:** Chuyên đề tốt nghiệp 1 – Học kỳ 1, Năm học 2026 – 2027  
 **Họ tên:** Mai Tuấn Kiệt  
 **MSSV:** 2374802010259  
 **Track:** DA (Data Analytics)  
 **Luồng nghiệp vụ:** L6 – Kho dữ liệu bán hàng và báo cáo doanh thu (Case study: Smart CRM – Mekong Mobile)  
-**Link GitHub Repo:** [https://github.com/Maituankiet1301/B-O-C-O-BU-I-4](https://github.com/Maituankiet1301/B-O-C-O-BU-I-4)
+**Link GitHub Repo:** [https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2](https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2)
 
 ---
 
 ### BẢNG ĐIỀN THÔNG TIN BÁO CÁO BUỔI 4
 
 **1. Link commit cuối buổi (docs/srs.md + file .drawio):**  
-[https://github.com/Maituankiet1301/B-O-C-O-BU-I-4/commit/06331c3](https://github.com/Maituankiet1301/B-O-C-O-BU-I-4/commit/06331c3) (Đã commit đầy đủ `docs/srs.md`, `docs/data-requirements.md`, `docs/usecase.drawio`, `docs/ai-disclosure.md` lên branch `main`).
+[https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2/commit/06331c3](https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2/commit/06331c3) (Đã commit đầy đủ `docs/srs.md`, `docs/data-requirements.md`, `docs/usecase.drawio`, `docs/ai-disclosure.md` lên branch `main`).
 
 **2. User Story:**  
 **06** story | **03** MUST (US1, US2, US3) | **14** tiêu chí GWT (**06** tiêu chí ngoại lệ/validation).

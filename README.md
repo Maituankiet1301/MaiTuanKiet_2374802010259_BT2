@@ -1,4 +1,4 @@
-# Smart CRM Mekong Mobile – Luồng L6: Kho Dữ Liệu Bán Hàng & Báo Cáo Doanh Thu (Bài Tập 2)
+﻿# Smart CRM Mekong Mobile – Luồng L6: Kho Dữ Liệu Bán Hàng & Báo Cáo Doanh Thu (Bài Tập 2)
 
 **Học phần:** Chuyên đề tốt nghiệp 1 – Học kỳ 1, Năm học 2026 – 2027  
 **Sinh viên thực hiện:** Mai Tuấn Kiệt  
@@ -7,7 +7,7 @@
 **Luồng nghiệp vụ:** L6 – Kho dữ liệu bán hàng và báo cáo doanh thu  
 **Giảng viên phụ trách:** TS. Nguyễn Trí Hải / ThS. Nguyễn Minh Tân / ThS. Trần Công Thanh  
 **Git Tag nộp bài:** `v0.2`  
-**GitHub Repository:** [https://github.com/Maituankiet1301/B-O-C-O-BU-I-4](https://github.com/Maituankiet1301/B-O-C-O-BU-I-4)
+**GitHub Repository:** [https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2](https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2)
 
 ---
 
@@ -28,8 +28,8 @@ Hệ thống hiện thực hóa trọn vẹn luồng phân tích dữ liệu bá
 
 ### Bước 1: Clone repo và di chuyển vào thư mục dự án
 ```bash
-git clone https://github.com/Maituankiet1301/B-O-C-O-BU-I-4.git
-cd B-O-C-O-BU-I-4
+git clone https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2.git
+cd MaiTuanKiet_2374802010259_BT2
 ```
 
 ### Bước 2: Tạo và kích hoạt môi trường ảo (Khuyến nghị)

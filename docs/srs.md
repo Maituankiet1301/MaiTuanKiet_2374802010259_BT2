@@ -1,9 +1,9 @@
-# BẢN ĐẶC TẢ YÊU CẦU PHẦN MỀM RÚT GỌN (SRS)
+﻿# BẢN ĐẶC TẢ YÊU CẦU PHẦN MỀM RÚT GỌN (SRS)
 **Dự án:** Hệ thống Smart CRM – Mekong Mobile  
 **Phân hệ / Luồng nghiệp vụ:** L6 – Kho dữ liệu bán hàng và báo cáo doanh thu  
 **Sinh viên thực hiện:** Mai Tuấn Kiệt | **MSSV:** 2374802010259 | **Track:** Data Analytics (DA)  
 **Tiêu chuẩn tham chiếu:** Rút gọn theo tinh thần chuẩn ISO/IEC/IEEE 29148  
-**Link GitHub Repo:** [https://github.com/Maituankiet1301/B-O-C-O-BU-I-4](https://github.com/Maituankiet1301/B-O-C-O-BU-I-4)
+**Link GitHub Repo:** [https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2](https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2)
 
 ---
 

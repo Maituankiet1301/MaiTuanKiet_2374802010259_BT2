@@ -1,4 +1,4 @@
-# Script build_bt1_pdf.ps1: Tạo hồ sơ BT1 hoàn chỉnh và xuất sang PDF
+﻿# Script build_bt1_pdf.ps1: Tạo hồ sơ BT1 hoàn chỉnh và xuất sang PDF
 param()
 
 $baseDir = "C:\Users\Admin\OneDrive\Báo Cáo Buổi 4"
@@ -356,7 +356,7 @@ $html = @"
       </tr>
       <tr>
         <td class="label">Kho lưu trữ mã nguồn (GitHub):</td>
-        <td class="value"><span class="badge-code">https://github.com/Maituankiet1301/B-O-C-O-BU-I-4</span></td>
+        <td class="value"><span class="badge-code">https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2</span></td>
       </tr>
     </table>
   </div>

@@ -1,4 +1,4 @@
-# Script build_bt2_pdf.ps1: Tạo hồ sơ Bài tập 2 (BT2) hoàn chỉnh và xuất sang PDF
+﻿# Script build_bt2_pdf.ps1: Tạo hồ sơ Bài tập 2 (BT2) hoàn chỉnh và xuất sang PDF
 param()
 
 $baseDir = "C:\Users\Admin\OneDrive\Báo Cáo Buổi 4"
@@ -288,7 +288,7 @@ $html = @"
       </tr>
       <tr>
         <td class="label">Đường dẫn GitHub Repo:</td>
-        <td class="val"><a href="https://github.com/Maituankiet1301/B-O-C-O-BU-I-4" style="color: #0284c7; font-weight: bold; text-decoration: underline;">https://github.com/Maituankiet1301/B-O-C-O-BU-I-4</a></td>
+        <td class="val"><a href="https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2" style="color: #0284c7; font-weight: bold; text-decoration: underline;">https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2</a></td>
       </tr>
       <tr>
         <td class="label">Git Release Tag nộp bài:</td>
@@ -652,8 +652,8 @@ Hệ thống được thiết kế theo tiêu chí <strong>TÁI LẬP ĐƯỢC (
 
 <pre>
 # Bước 1: Tải mã nguồn dự án từ GitHub
-git clone https://github.com/Maituankiet1301/B-O-C-O-BU-I-4.git
-cd B-O-C-O-BU-I-4
+git clone https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2.git
+cd MaiTuanKiet_2374802010259_BT2
 
 # Bước 2: Tạo và kích hoạt môi trường ảo Python 3.11
 python -m venv .venv

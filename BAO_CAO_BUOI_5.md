@@ -1,4 +1,4 @@
-# BÁO CÁO BUỔI 5 — THIẾT KẾ KIẾN TRÚC VÀ MÔ HÌNH DỮ LIỆU
+﻿# BÁO CÁO BUỔI 5 — THIẾT KẾ KIẾN TRÚC VÀ MÔ HÌNH DỮ LIỆU
 
 **Học phần:** Chuyên đề tốt nghiệp 1 — Học kỳ 1, Năm học 2026–2027
 **Họ tên:** Mai Tuấn Kiệt
@@ -6,7 +6,7 @@
 **Track:** Data Analytics (DA)
 **Luồng nghiệp vụ:** L6 — Kho dữ liệu bán hàng và báo cáo doanh thu
 **Case study:** Smart CRM — Mekong Mobile
-**Link GitHub repo:** [Maituankiet1301/B-O-C-O-BU-I-4](https://github.com/Maituankiet1301/B-O-C-O-BU-I-4)
+**Link GitHub repo:** [Maituankiet1301/MaiTuanKiet_2374802010259_BT2](https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2)
 
 ---
 

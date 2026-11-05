@@ -1,10 +1,10 @@
-# BÁO CÁO BÀI TẬP 2 (BT2) — HIỆN THỰC HÓA MODULE CỐT LÕI
+﻿# BÁO CÁO BÀI TẬP 2 (BT2) — HIỆN THỰC HÓA MODULE CỐT LÕI
 **Học phần:** Chuyên đề tốt nghiệp 1 – Học kỳ 1, Năm học 2026 – 2027  
 **Phân hệ / Luồng nghiệp vụ:** Luồng L6 – Kho dữ liệu bán hàng & Báo cáo doanh thu đa chiều  
 **Case Study:** Mekong Mobile Smart CRM  
 **Sinh viên thực hiện:** Mai Tuấn Kiệt | **MSSV:** 2374802010259 | **Track:** Data Analytics (DA)  
 **Giảng viên chấm điểm:** TS. Nguyễn Trí Hải / ThS. Nguyễn Minh Tân / ThS. Trần Công Thanh  
-**Đường dẫn GitHub Repo:** [https://github.com/Maituankiet1301/B-O-C-O-BU-I-4](https://github.com/Maituankiet1301/B-O-C-O-BU-I-4)  
+**Đường dẫn GitHub Repo:** [https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2](https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2)  
 **Git Tag chính thức:** `v0.2`  
 **File PDF chính thức đã xuất:** [BT2_2374802010259_MaiTuanKiet.pdf](BT2_2374802010259_MaiTuanKiet.pdf)
 
@@ -111,8 +111,8 @@ Chạy bằng một lệnh duy nhất: `pytest -v`
 
 ```bash
 # Bước 1: Clone repo
-git clone https://github.com/Maituankiet1301/B-O-C-O-BU-I-4.git
-cd B-O-C-O-BU-I-4
+git clone https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2.git
+cd MaiTuanKiet_2374802010259_BT2
 
 # Bước 2: Tạo và kích hoạt môi trường ảo
 python -m venv .venv
