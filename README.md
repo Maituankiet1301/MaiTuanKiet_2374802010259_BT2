@@ -1,66 +1,149 @@
-# Smart CRM Mekong Mobile – Phân hệ Luồng L6: Kho dữ liệu bán hàng & Báo cáo doanh thu
+# Smart CRM Mekong Mobile – Luồng L6: Kho Dữ Liệu Bán Hàng & Báo Cáo Doanh Thu (Bài Tập 2)
 
-**Dự án học phần:** Chuyên đề tốt nghiệp 1 – Học kỳ 1, Năm học 2026 – 2027  
+**Học phần:** Chuyên đề tốt nghiệp 1 – Học kỳ 1, Năm học 2026 – 2027  
 **Sinh viên thực hiện:** Mai Tuấn Kiệt  
 **MSSV:** 2374802010259  
 **Track:** Data Analytics (DA)  
 **Luồng nghiệp vụ:** L6 – Kho dữ liệu bán hàng và báo cáo doanh thu  
 **Giảng viên phụ trách:** TS. Nguyễn Trí Hải / ThS. Nguyễn Minh Tân / ThS. Trần Công Thanh  
+**Git Tag nộp bài:** `v0.2`  
+**GitHub Repository:** [https://github.com/Maituankiet1301/B-O-C-O-BU-I-4](https://github.com/Maituankiet1301/B-O-C-O-BU-I-4)
 
 ---
 
-## 1. Giới thiệu tổng quan và Mục tiêu bài toán
-Hệ thống giải quyết bài toán hợp nhất, chuẩn hóa và phân tích dữ liệu bán hàng phân tán từ 24 chi nhánh của chuỗi bán lẻ thiết bị Mekong Mobile. Quy trình bao gồm:
-1. Thu thập dữ liệu đơn hàng định kỳ từ 24 tệp CSV/Excel (~26.000 giao dịch).
-2. Xử lý các vấn đề chất lượng dữ liệu: lỗi định dạng ngày tháng, trùng lặp mã đơn giữa các chi nhánh, sai lệch số tiền, lỗi dữ liệu khách hàng.
-3. Nạp dữ liệu vào mô hình kho dữ liệu đa chiều Star Schema (DuckDB/PostgreSQL).
-4. Xây dựng Dashboard phân tích doanh thu trực quan bằng Streamlit phục vụ Quản lý cửa hàng và Ban giám đốc chuỗi.
+## 1. Mô tả hệ thống (3–5 câu)
+Hệ thống hiện thực hóa trọn vẹn luồng phân tích dữ liệu bán hàng Luồng L6 cho chuỗi 24 chi nhánh Mekong Mobile theo mô hình kho dữ liệu hình sao (Star Schema). Pipeline ETL tự động trích xuất các tệp CSV thô, thực thi 6 hàm kiểm tra chất lượng dữ liệu trả về số lượng và tỷ lệ lỗi, đồng thời cách ly các bản ghi vi phạm vào bảng reject. Dữ liệu sạch được nạp vào kho DuckDB với cơ chế Idempotent chống nhân đôi dữ liệu khi nạp lại nhiều lần. Cuối cùng, giao diện Dashboard Streamlit trực quan hóa các chỉ số doanh thu (CH1), cảnh báo chi nhánh sụt giảm 3 tháng liên tiếp (CH2), phân tích cơ cấu danh mục sản phẩm (CH4) và xử lý đầy đủ cả 3 trạng thái: Đang tải, Rỗng và Lỗi kết nối.
 
 ---
 
-## 2. Cấu trúc thư mục dự án (Repository Structure)
+## 2. Yêu cầu môi trường
+- **Hệ điều hành:** Windows 10/11, macOS, hoặc Linux.
+- **Python Runtime:** Phiên bản Python 3.11 trở lên (`python >= 3.11`).
+- **Cơ sở dữ liệu:** DuckDB (engine nhúng không cần cài đặt daemon server).
+- **Trình duyệt web:** Google Chrome, Microsoft Edge, hoặc Firefox để xem Dashboard.
 
-```text
-.
-├── BAO_CAO_BUOI_4.md          # Báo cáo kết quả thực hành Buổi 4 (12 mục điền đủ)
-├── BAO_CAO_BUOI_5.md          # Thiết kế kiến trúc, mô hình dữ liệu và wireframe Buổi 5
-├── README.md                  # Hướng dẫn tổng quan kho mã nguồn
-├── docs/                      # Thư mục hồ sơ phân tích và thiết kế
-│   ├── srs.md                 # Bản đặc tả yêu cầu phần mềm rút gọn (SRS 6 mục)
-│   ├── data-requirements.md   # Đặc tả yêu cầu dữ liệu chuyên ngành DA (Mẫu track)
-│   ├── architecture.drawio    # Sơ đồ kiến trúc và luồng dữ liệu L6
-│   ├── architecture.png      # Ảnh xem nhanh sơ đồ kiến trúc
-│   ├── erd.drawio             # Mô hình Star Schema của track DA
-│   ├── erd.png                 # Ảnh xem nhanh mô hình Star Schema
-│   ├── wireframe.drawio       # Nguồn wireframe 3 màn hình dashboard
-│   ├── wireframe.png          # Bản xem nhanh 3 wireframe
-│   ├── usecase.drawio         # File nguồn sơ đồ Use Case Diagram (Draw.io XML)
-│   ├── usecase-specification.md # Đặc tả chi tiết Use Case UC2 & UC4 (Luồng chính & Ngoại lệ)
-│   └── ai-disclosure.md       # Bảng khai báo minh bạch công cụ AI và cam kết
-├── src/                       # Mã nguồn pipeline ETL và Dashboard (Phát triển ở BT2)
-└── tests/                     # Kịch bản kiểm thử chất lượng dữ liệu (Phát triển ở BT3)
+---
+
+## 3. Cài đặt và Khởi chạy (Mỗi bước một lệnh cụ thể)
+
+### Bước 1: Clone repo và di chuyển vào thư mục dự án
+```bash
+git clone https://github.com/Maituankiet1301/B-O-C-O-BU-I-4.git
+cd B-O-C-O-BU-I-4
 ```
 
-### Hồ sơ thiết kế Buổi 5
+### Bước 2: Tạo và kích hoạt môi trường ảo (Khuyến nghị)
+- Trên Windows PowerShell:
+  ```powershell
+  python -m venv .venv
+  .venv\Scripts\activate
+  ```
+- Trên Linux / macOS:
+  ```bash
+  python3 -m venv .venv
+  source .venv/bin/activate
+  ```
 
-Mở [BAO_CAO_BUOI_5.md](BAO_CAO_BUOI_5.md) để xem các quyết định kiến trúc, grain và điểm cần xác nhận. Tệp `.drawio` là nguồn sơ đồ có thể chỉnh sửa bằng diagrams.net/draw.io; GitHub không hiển thị sơ đồ từ XML nên repo kèm các ảnh PNG xem nhanh: [kiến trúc](docs/architecture.png), [Star Schema](docs/erd.png) và [ba wireframe](docs/wireframe.png).
+### Bước 3: Cài đặt các thư viện theo tệp khóa phiên bản
+```bash
+pip install -r requirements.txt
+```
 
-### Xem nhanh thiết kế
+### Bước 4: Chạy Pipeline ETL nạp kho dữ liệu DuckDB (1 lệnh duy nhất)
+```bash
+python run_pipeline.py
+```
+*(Hệ thống sẽ tự động quét dữ liệu mẫu tại `data/raw/` hoặc `seeds/`, thực thi kiểm tra chất lượng, nạp các bảng Dimension, Fact và Rejects vào `data/dwh_mekong.duckdb`)*
 
-![Sơ đồ kiến trúc và luồng dữ liệu](docs/architecture.png)
-
-![Mô hình dữ liệu Star Schema](docs/erd.png)
-
-![Ba màn hình wireframe](docs/wireframe.png)
-
-Buổi 5 hoàn thiện tài liệu thiết kế BT1; phần mã ETL và dashboard thuộc BT2.
+### Bước 5: Khởi chạy Dashboard Báo cáo Doanh thu Streamlit
+```bash
+streamlit run app.py
+```
+*(Mở trình duyệt tại địa chỉ: `http://localhost:8501` để xem giao diện)*
 
 ---
 
-## 3. Các lưu ý quan trọng đã khắc phục từ phản hồi BT1
-- **Đúng phạm vi case study:** Bám sát bài toán Luồng L6 của chuỗi Mekong Mobile (không làm nhầm sang giỏ hàng/thương mại điện tử khác).
-- **Quy tắc nghiệp vụ:** Trích dẫn chuẩn xác các quy tắc Bảng 9.1 và logic tính toán bán lẻ thiết bị di động.
-- **Sơ đồ Use Case:** Có đầy đủ ranh giới hệ thống, 4 tác nhân (bao gồm actor hệ thống Cron Timer), 6 use case, quan hệ `<<include>>`, `<<extend>>`, bảng chú thích (Legend) và khung phạm vi loại trừ (Out of Scope).
-- **Bảng truy vết yêu cầu (Traceability Matrix):** Đầy đủ 100%, tuyệt đối không có ô trống.
-- **Yêu cầu phi chức năng (NFR):** Toàn bộ 4 NFR đều có ngưỡng số đo được cụ thể (thời gian dưới 45 giây, phản hồi dashboard dưới 2.5 giây, độ chính xác null = 0%, tính nhất quán >= 99.5%).
-- **Liêm chính học thuật:** Bảng khai báo AI có dòng cam kết đầy đủ thông tin Họ tên, MSSV, ngày tháng.
+## 4. Lệnh chạy bộ kiểm thử tự động (Test Suite)
+Chạy toàn bộ 4 trường hợp kiểm thử (Luồng đúng, Giá trị biên, Dữ liệu sai, và Tính Idempotent) bằng **MỘT LỆNH DUY NHẤT**:
+```bash
+pytest -v
+```
+**Kết quả kỳ vọng:** 100% test cases **PASSED** trong dưới 2 giây.
+
+---
+
+## 5. Cách kiểm tra hệ thống đã chạy đúng (Checklist chấm điểm của Giảng viên)
+
+### A. Kiểm tra tính Idempotent (Chống nhân đôi dữ liệu khi nạp lại)
+Chạy pipeline lần 1 và lần 2 liên tiếp:
+```bash
+python run_pipeline.py
+python run_pipeline.py
+```
+**Kết quả xác nhận:** Số dòng trong bảng `fact_sales` ở cả 2 lần đều **bằng đúng 3.144 dòng** (không bị tăng lên gấp đôi).
+
+### B. Kiểm tra Báo cáo Chất lượng & Bảng Reject
+Sau khi chạy pipeline, mở terminal hoặc DuckDB CLI kiểm tra bảng reject:
+- `reject_orders`: chứa 5 đơn hàng vi phạm (lỗi ngày tháng không hợp lệ `31/02/2025`, lỗi chuỗi tiền tệ hỏng, mã cửa hàng lạ `CH99`).
+- `reject_order_items`: chứa 1 dòng mặt hàng có thành tiền sai lệch vượt quá ngưỡng cho phép 1 VNĐ.
+
+### C. Kiểm tra 3 trạng thái trên giao diện Dashboard (Streamlit)
+Mở ứng dụng `app.py`, trên thanh bên (Sidebar) có 2 công tắc phục vụ kiểm thử nhanh:
+1. **Trạng thái Đang tải (Loading):** Mỗi khi bấm thay đổi bộ lọc, spinner *"⏳ Đang thực thi truy vấn..."* hiển thị rõ ràng.
+2. **Trạng thái Dữ liệu rỗng (Empty State):**
+   - Tích chọn checkbox: *"🟡 Giả lập Bộ lọc rỗng"* $\rightarrow$ Giao diện hiển thị hộp thông báo vàng: *"🔍 Không tìm thấy dữ liệu giao dịch phù hợp với bộ lọc"* kèm các thông tin chi tiết và nút Đặt lại bộ lọc.
+3. **Trạng thái Lỗi kết nối CSDL (Error State):**
+   - Tích chọn checkbox: *"🔴 Giả lập Lỗi kết nối CSDL"* $\rightarrow$ Giao diện hiển thị cảnh báo đỏ thân thiện: *"⚠️ Lỗi kết nối cơ sở dữ liệu kho phân tích"*, chuỗi kết nối và mật khẩu được ẩn hoàn toàn (NFR3), kèm nút *"🔄 Thử kết nối lại ngay"*.
+
+---
+
+## 6. Khởi chạy bằng Docker (Mức đánh giá cao)
+Nếu máy đã cài Docker và Docker Compose, toàn bộ hệ thống có thể khởi chạy bằng **2 câu lệnh**:
+```bash
+docker-compose build
+docker-compose up -d
+```
+Truy cập Dashboard tại `http://localhost:8501`.
+
+---
+
+## 7. Cấu trúc Thư mục Dự án
+```text
+.
+├── app.py                     # Entrypoint Dashboard Streamlit (Xử lý 3 trạng thái)
+├── run_pipeline.py            # Entrypoint chạy Pipeline ETL 1 lệnh duy nhất
+├── requirements.txt           # Danh mục thư viện có khóa phiên bản cố định (==)
+├── Dockerfile                 # Đóng gói Docker container
+├── docker-compose.yml         # Khởi chạy toàn bộ hệ thống bằng Docker Compose
+├── .env.example               # Biến môi trường mẫu
+├── .gitignore                 # Loại trừ file tạm, cache, .env và file CSDL lớn
+├── README.md                  # Tài liệu hướng dẫn cài đặt và kiểm thử
+├── data/
+│   ├── raw/                   # Dữ liệu CSV thô nguồn của 24 cửa hàng
+│   └── dwh_mekong.duckdb      # Kho dữ liệu DuckDB Star Schema
+├── seeds/                     # Dữ liệu hạt giống khởi tạo (stores, products, orders, items)
+│   └── generate_seeds.py      # Script sinh dữ liệu mẫu giả lập
+├── sql/
+│   └── schema.sql             # Script DDL tạo các bảng Dimension, Fact, Reject, Audit
+├── src/                       # Mã nguồn tách lớp chuẩn theo Track DA
+│   ├── extract/               # Pha 1: Trích xuất dữ liệu từ các file CSV
+│   │   └── extractor.py
+│   ├── quality/               # Pha kiểm soát chất lượng dữ liệu (6 hàm đo lường)
+│   │   └── checker.py
+│   ├── transform/             # Pha 2: Làm sạch, chuẩn hóa ngày ISO, che SĐT, gắn mã Dim/Fact
+│   │   └── transformer.py
+│   ├── load/                  # Pha 3: Nạp dữ liệu vào DuckDB với cơ chế Idempotent
+│   │   └── loader.py
+│   ├── pipeline.py            # Bộ điều phối Pipeline (Orchestrator)
+│   └── dashboard/
+│       └── app.py
+├── tests/                     # Bộ kiểm thử tự động pytest
+│   └── test_pipeline.py       # 4 test cases: Luồng đúng, Biên, Dữ liệu sai, Idempotent
+└── docs/                      # Hồ sơ tài liệu
+    ├── srs.md                 # Đặc tả yêu cầu phần mềm từ BT1
+    ├── data-requirements.md   # Đặc tả dữ liệu chuyên ngành DA
+    ├── thay-doi-thiet-ke.md   # Bản ghi nhận 3 thay đổi thiết kế so với BT1
+    ├── ai-disclosure.md       # Bảng khai báo công cụ AI và cam kết học thuật (BT2)
+    ├── architecture-thuc-te.md # Sơ đồ kiến trúc đã hiện thực thực tế
+    └── architecture-thuc-te.drawio # File thiết kế Draw.io gốc
+```

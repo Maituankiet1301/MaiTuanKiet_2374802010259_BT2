@@ -1,0 +1,25 @@
+﻿ma_san_pham,ten_san_pham,danh_muc,hang_san_xuat,gia_niem_yet
+SP001,iPhone 15 Pro Max 256GB,DIEN_THOAI_CAO_CAP,Apple,29990000
+SP002,Samsung Galaxy S24 Ultra 256GB,DIEN_THOAI_CAO_CAP,Samsung,28490000
+SP003,Xiaomi 14 Ultra 512GB,DIEN_THOAI_CAO_CAP,Xiaomi,24990000
+SP004,iPhone 14 Pro 128GB,DIEN_THOAI_CAO_CAP,Apple,22490000
+SP005,Samsung Galaxy A55 5G,DIEN_THOAI_TAM_TRUNG,Samsung,8990000
+SP006,Oppo Reno 11 5G,DIEN_THOAI_TAM_TRUNG,Oppo,9490000
+SP007,Xiaomi Redmi Note 13 Pro,DIEN_THOAI_TAM_TRUNG,Xiaomi,6990000
+SP008,Vivo V30e 5G,DIEN_THOAI_TAM_TRUNG,Vivo,8290000
+SP009,Samsung Galaxy A05,DIEN_THOAI_GIA_RE,Samsung,2890000
+SP010,Realme C53,DIEN_THOAI_GIA_RE,Realme,3190000
+SP011,Xiaomi Redmi 13C,DIEN_THOAI_GIA_RE,Xiaomi,2790000
+SP012,Tecno Spark 20,DIEN_THOAI_GIA_RE,Tecno,2990000
+SP013,Sạc nhanh 25W Samsung Type-C,PHU_KIEN_SAC_CAP,Samsung,390000
+SP014,Cáp sạc Anker Type-C to Lightning,PHU_KIEN_SAC_CAP,Anker,250000
+SP015,Củ sạc GaN 65W 3 cổng Baseus,PHU_KIEN_SAC_CAP,Baseus,590000
+SP016,Cáp sạc nhanh 100W Baseus Type-C,PHU_KIEN_SAC_CAP,Baseus,180000
+SP017,Tai nghe AirPods Pro 2 Type-C,PHU_KIEN_TAI_NGHE,Apple,5690000
+SP018,Tai nghe Samsung Galaxy Buds 2 Pro,PHU_KIEN_TAI_NGHE,Samsung,2990000
+SP019,Tai nghe Bluetooth Sony WH-CH520,PHU_KIEN_TAI_NGHE,Sony,1190000
+SP020,Tai nghe True Wireless Soundpeats Air3,PHU_KIEN_TAI_NGHE,Soundpeats,750000
+SP021,Pin dự phòng Anker 20000mAh 20W,PHU_KIEN_KHAC,Anker,790000
+SP022,Kính cường lực KingKong chống nhìn trộm,PHU_KIEN_KHAC,KingKong,120000
+SP023,Ốp lưng Magsafe UAG cao cấp,PHU_KIEN_KHAC,UAG,650000
+SP024,Giá đỡ điện thoại trên xe hơi Baseus,PHU_KIEN_KHAC,Baseus,220000

@@ -1,0 +1,55 @@
+<mxfile host="Electron" modified="2026-11-05T11:00:00.000Z" agent="Antigravity" version="21.0.0" type="device">
+  <diagram id="arch-thuc-te-l6" name="Architecture Thuc Te - Luong L6">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- 1. Tầng Nguồn Dữ Liệu -->
+        <mxCell id="box_source" value="1. TẦNG NGUỒN DỮ LIỆU (DATA SOURCES)&#xa;─────────────────────────────────────&#xa;• stores.csv (24 cửa hàng)&#xa;• products.csv (24 sản phẩm)&#xa;• orders_2024_2026.csv (2.058 đơn)&#xa;• order_items.csv (3.146 dòng chi tiết)" style="shape=rect;rounded=1;arcSize=6;fillColor=#f8fafc;strokeColor=#475569;strokeWidth=1.5;align=left;spacingLeft=10;fontSize=11;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="230" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- 2. Tầng Extract -->
+        <mxCell id="box_extract" value="2. TẦNG TRÍCH XUẤT (SRC/EXTRACT)&#xa;─────────────────────────────────────&#xa;• DataExtractor (extractor.py)&#xa;• Đọc CSV vào Pandas DataFrame&#xa;• Xử lý mất file an toàn (Graceful Fallback)" style="shape=rect;rounded=1;arcSize=6;fillColor=#e0f2fe;strokeColor=#0284c7;strokeWidth=1.5;align=left;spacingLeft=10;fontSize=11;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="320" y="80" width="240" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- 3. Tầng Quality & Transform -->
+        <mxCell id="box_transform" value="3. TẦNG CHẤT LƯỢNG &amp; BIẾN ĐỔI&#xa;─────────────────────────────────────&#xa;• Quality Checker (checker.py - 6 hàm)&#xa;  - Trả về: (failed_count, error_rate)&#xa;• DataTransformer (transformer.py)&#xa;  - Chuẩn hóa ngày 3 định dạng -> ISO&#xa;  - Làm sạch tiền tệ (bỏ 'đ', ép BIGINT)&#xa;  - Che 4 số cuối SĐT (090123****)" style="shape=rect;rounded=1;arcSize=6;fillColor=#fef3c7;strokeColor=#d97706;strokeWidth=1.5;align=left;spacingLeft=10;fontSize=11;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="610" y="80" width="250" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- 4. Tầng DWH DuckDB -->
+        <mxCell id="box_dwh" value="4. TẦNG KHO DỮ LIỆU DUCKDB (STAR SCHEMA)&#xa;──────────────────────────────────────────────────────────────────&#xa;• dim_date (731 dòng) | dim_store (24 dòng)&#xa;• dim_product (25 dòng) | dim_customer (11 dòng)&#xa;• fact_sales (3.144 dòng) - Grain: 1 SP / 1 đơn / 1 CH / 1 ngày&#xa;  -> Chống nhân đôi: UNIQUE(store_id, order_id, line_item_id)&#xa;• reject_orders (5 đơn lỗi) | reject_order_items (1 dòng lỗi)&#xa;• etl_audit_log (Lưu vết từng batch ETL)" style="shape=rect;rounded=1;arcSize=6;fillColor=#dcfce7;strokeColor=#16a34a;strokeWidth=2;align=left;spacingLeft=10;fontSize=11;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="320" y="270" width="540" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- 5. Tầng Trình diễn (Dashboard Streamlit) -->
+        <mxCell id="box_ui" value="5. TẦNG TRÌNH DIỄN KẾT QUẢ (STREAMLIT - APP.PY)&#xa;──────────────────────────────────────────────────────────────────&#xa;• CH1: Biểu đồ doanh thu theo tháng/ngày kèm Đường trung bình Benchmark&#xa;• CH2: Bảng cảnh báo cửa hàng sụt giảm 3 tháng liên tiếp (Warning Badge)&#xa;• CH4: Biểu đồ Donut cơ cấu danh mục thiết bị &amp; phụ kiện theo quý&#xa;• XỬ LÝ ĐỦ 3 TRẠNG THÁI:&#xa;  1. Đang tải (Loading Spinner)&#xa;  2. Bộ lọc không ra kết quả / Dữ liệu rỗng (Empty Filter / Empty DB)&#xa;  3. Lỗi kết nối CSDL (Error State - ẩn chuỗi kết nối, có nút Thử lại)" style="shape=rect;rounded=1;arcSize=6;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=2;align=left;spacingLeft=10;fontSize=11;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="320" y="470" width="540" height="150" as="geometry" />
+        </mxCell>
+
+        <!-- Mũi tên liên kết -->
+        <mxCell id="arr1" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#475569;" edge="1" parent="1" source="box_source" target="box_extract">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr2" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#0284c7;" edge="1" parent="1" source="box_extract" target="box_transform">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr3" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#d97706;" edge="1" parent="1" source="box_transform" target="box_dwh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr4" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#16a34a;" edge="1" parent="1" source="box_dwh" target="box_ui">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Hộp chú thích -->
+        <mxCell id="box_legend" value="CHÚ THÍCH THIẾT KẾ:&#xa;• Tách lớp độc lập: Extract -> Quality -> Transform -> Load -> UI&#xa;• 1 Lệnh duy nhất chạy ETL: python run_pipeline.py&#xa;• 1 Lệnh duy nhất chạy Test: pytest (PASS 100%)&#xa;• 1 Lệnh duy nhất mở Dashboard: streamlit run app.py" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#fffbeb;strokeColor=#b45309;strokeWidth=1;size=14;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="270" width="230" height="150" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

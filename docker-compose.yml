@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  mekong-dwh-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mekong_mobile_l6_app
+    ports:
+      - "8501:8501"
+    environment:
+      - DB_TYPE=duckdb
+      - DB_PATH=data/dwh_mekong.duckdb
+      - STREAMLIT_PORT=8501
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
