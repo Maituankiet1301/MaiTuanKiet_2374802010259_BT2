@@ -20,6 +20,23 @@ class DWHLoader:
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
         self.schema_file = os.path.join(base_dir, "sql", "schema.sql")
 
+    def get_max_keys(self) -> Dict[str, int]:
+        """Lấy giá trị khóa lớn nhất hiện có trong CSDL để tránh trùng lặp khi nạp batch mới"""
+        con = self.get_connection()
+        try:
+            res_fact = con.execute("SELECT COALESCE(MAX(sales_fact_key), 100000) FROM fact_sales;").fetchone()
+            res_rej_o = con.execute("SELECT COALESCE(MAX(reject_id), 1000) FROM reject_orders;").fetchone()
+            res_rej_i = con.execute("SELECT COALESCE(MAX(reject_id), 5000) FROM reject_order_items;").fetchone()
+            return {
+                "max_fact_key": res_fact[0] if res_fact else 100000,
+                "max_reject_order_id": res_rej_o[0] if res_rej_o else 1000,
+                "max_reject_item_id": res_rej_i[0] if res_rej_i else 5000
+            }
+        except Exception:
+            return {"max_fact_key": 100000, "max_reject_order_id": 1000, "max_reject_item_id": 5000}
+        finally:
+            con.close()
+
     def get_connection(self) -> duckdb.DuckDBPyConnection:
         return duckdb.connect(self.db_path)
 
@@ -129,7 +146,12 @@ class DWHLoader:
                     quantity, unit_price, line_total, discount_amount, created_at
                 )
                 SELECT 
-                    sales_fact_key, order_id, store_id, line_item_id,
+                    CASE 
+                        WHEN sales_fact_key IN (SELECT sales_fact_key FROM fact_sales) 
+                        THEN (SELECT COALESCE(MAX(sales_fact_key), 100000) FROM fact_sales) + ROW_NUMBER() OVER ()
+                        ELSE sales_fact_key 
+                    END,
+                    order_id, store_id, line_item_id,
                     date_key, store_key, product_key, customer_key,
                     quantity, unit_price, line_total, discount_amount, CURRENT_TIMESTAMP
                 FROM temp_fact;
@@ -157,7 +179,12 @@ class DWHLoader:
                         raw_phone, raw_amount, error_code, rejection_reason, rejected_at
                     )
                     SELECT 
-                        reject_id, batch_id, order_id, store_id, raw_date,
+                        CASE 
+                            WHEN reject_id IN (SELECT reject_id FROM reject_orders) 
+                            THEN (SELECT COALESCE(MAX(reject_id), 1000) FROM reject_orders) + ROW_NUMBER() OVER ()
+                            ELSE reject_id 
+                        END,
+                        batch_id, order_id, store_id, raw_date,
                         raw_phone, raw_amount, error_code, rejection_reason, CURRENT_TIMESTAMP
                     FROM temp_rej_orders;
                 """)
@@ -176,7 +203,12 @@ class DWHLoader:
                         error_code, rejection_reason, rejected_at
                     )
                     SELECT 
-                        reject_id, batch_id, order_id, store_id, product_code,
+                        CASE 
+                            WHEN reject_id IN (SELECT reject_id FROM reject_order_items) 
+                            THEN (SELECT COALESCE(MAX(reject_id), 5000) FROM reject_order_items) + ROW_NUMBER() OVER ()
+                            ELSE reject_id 
+                        END,
+                        batch_id, order_id, store_id, product_code,
                         quantity, unit_price, line_total, calculated_total, diff_amount,
                         error_code, rejection_reason, CURRENT_TIMESTAMP
                     FROM temp_rej_items;

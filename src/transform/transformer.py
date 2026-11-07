@@ -7,7 +7,7 @@ import uuid
 import logging
 import pandas as pd
 from datetime import datetime
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Optional
 
 from ..quality.checker import (
     parse_date_flexibly,
@@ -19,8 +19,12 @@ logger = logging.getLogger(__name__)
 
 
 class DataTransformer:
-    def __init__(self, batch_id: str = None):
+    def __init__(self, batch_id: str = None, start_keys: Optional[Dict[str, int]] = None):
         self.batch_id = batch_id or f"BATCH_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        keys = start_keys or {}
+        self.start_fact_key = keys.get("max_fact_key", 100000)
+        self.start_reject_order_id = keys.get("max_reject_order_id", 1000)
+        self.start_reject_item_id = keys.get("max_reject_item_id", 5000)
 
     def transform_all(
         self,
@@ -82,7 +86,7 @@ class DataTransformer:
         # =============================================================
         clean_orders = []
         rejected_orders = []
-        reject_order_counter = 1000
+        reject_order_counter = self.start_reject_order_id
 
         for idx, row in df_orders_raw.iterrows():
             ma_don = str(row.get("Ma don", "")).strip()
@@ -231,8 +235,8 @@ class DataTransformer:
 
         fact_rows = []
         rejected_items = []
-        reject_item_counter = 5000
-        fact_key_counter = 100000
+        reject_item_counter = self.start_reject_item_id
+        fact_key_counter = self.start_fact_key
 
         # Nhom cac item theo (store_id, order_id) de tao line_item_id
         grouped_items = df_items_raw.groupby(["ma_cua_hang", "ma_don"])
