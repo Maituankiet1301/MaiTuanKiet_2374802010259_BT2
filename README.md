@@ -72,12 +72,25 @@ Hệ thống yêu cầu xác thực trước khi xem báo cáo. Sử dụng mộ
 
 ---
 
-## 4. Lệnh chạy bộ kiểm thử tự động (Test Suite)
-Chạy toàn bộ 4 trường hợp kiểm thử (Luồng đúng, Giá trị biên, Dữ liệu sai, và Tính Idempotent) bằng **MỘT LỆNH DUY NHẤT**:
+## 4. Lệnh chạy bộ kiểm thử tự động (Test Suite - 12 Test Cases)
+Bộ kiểm thử tự động được cấu hình qua `pytest.ini` (`pythonpath = .`), bao phủ trọn vẹn **12 Test Cases thuộc đủ 5 loại kiểm thử bắt buộc cho Track DA** (Luồng đúng, Giá trị biên 2 phía, Dữ liệu sai, Bảo mật & Chất lượng dữ liệu, Tái lập Idempotent):
+
+Chạy toàn bộ 12 ca kiểm thử bằng **MỘT LỆNH DUY NHẤT**:
 ```bash
 pytest -v
 ```
-**Kết quả kỳ vọng:** 100% test cases **PASSED** trong dưới 2 giây.
+Hoặc chạy gọn:
+```bash
+pytest -q
+```
+**Kết quả thực tế:** **100% test cases PASSED (12/12 passed trong ~1.6 giây)**.
+
+Chi tiết xem tại:
+- **Test Plan rút gọn 4 mục:** [`docs/test-plan.md`](docs/test-plan.md)
+- **Test Report 12 ca kiểm thử đủ 8 cột:** [`docs/test-report.md`](docs/test-report.md)
+- **Minh chứng ảnh chụp màn hình từng test case:** [`docs/screenshots/`](docs/screenshots/)
+- **Nhật ký sửa lỗi Bug Log (≥ 3 bug, đủ 7 dòng):** [`docs/bug-log.md`](docs/bug-log.md)
+- **Bản ghi nhận thay đổi thiết kế:** [`docs/thay-doi-thiet-ke.md`](docs/thay-doi-thiet-ke.md)
 
 ---
 
