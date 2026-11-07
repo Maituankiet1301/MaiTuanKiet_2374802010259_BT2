@@ -14,6 +14,7 @@ Framework: Streamlit + Plotly + DuckDB
 """
 
 import os
+import hashlib
 import duckdb
 import pandas as pd
 import plotly.express as px
@@ -32,11 +33,18 @@ st.set_page_config(
 # ==============================================================================
 # XÁC THỰC ĐĂNG NHẬP CƠ BẢN (Authentication - yêu cầu thành phần 3)
 # ==============================================================================
-# Danh sách tài khoản hệ thống (trong thực tế sẽ lưu DB với mật khẩu băm)
+# Cơ chế băm mật khẩu một chiều bằng SHA-256 kèm salt bảo mật (NFR3 / OWASP A07 - BUG-04)
+AUTH_SALT = os.getenv("AUTH_SALT", "mekong_crm_salt_2026")
+
+def hash_password(password: str, salt: str = AUTH_SALT) -> str:
+    """Băm mật khẩu SHA-256 kèm salt, tuyệt đối không lưu plaintext credentials."""
+    return hashlib.sha256(f"{salt}:{password}".encode("utf-8")).hexdigest()
+
+# Mật khẩu được lưu trữ dưới dạng mã băm SHA-256 (mật khẩu demo: admin123, manager123, data123)
 USERS = {
-    "admin":    {"password": "admin123",    "role": "Giám đốc kinh doanh", "store": None},
-    "manager1": {"password": "manager123",  "role": "Quản lý cửa hàng",    "store": "CH01"},
-    "dataeng":  {"password": "data123",     "role": "Kỹ sư dữ liệu",      "store": None},
+    "admin":    {"password_hash": hash_password(os.getenv("ADMIN_PASSWORD", "admin123")),    "role": "Giám đốc kinh doanh", "store": None},
+    "manager1": {"password_hash": hash_password(os.getenv("MANAGER_PASSWORD", "manager123")),  "role": "Quản lý cửa hàng",    "store": "CH01"},
+    "dataeng":  {"password_hash": hash_password(os.getenv("DATAENG_PASSWORD", "data123")),     "role": "Kỹ sư dữ liệu",      "store": None},
 }
 
 def check_login():
@@ -58,7 +66,7 @@ def check_login():
                 submitted = st.form_submit_button("Đăng nhập", use_container_width=True)
                 if submitted:
                     user = USERS.get(username)
-                    if user and user["password"] == password:
+                    if user and user["password_hash"] == hash_password(password):
                         st.session_state.authenticated = True
                         st.session_state.username = username
                         st.session_state.role = user["role"]
