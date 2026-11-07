@@ -21,7 +21,7 @@ def parse_date_flexibly(date_val: str) -> Optional[datetime]:
     if pd.isna(date_val) or not str(date_val).strip():
         return None
     s = str(date_val).strip()
-    formats = ["%d/%m/%Y", "%d-%m-%y", "%Y.%m.%d", "%Y-%m-%d"]
+    formats = ["%d/%m/%Y", "%d-%m-%y", "%d-%m-%Y", "%Y.%m.%d", "%Y-%m-%d"]
     for fmt in formats:
         try:
             dt = datetime.strptime(s, fmt)

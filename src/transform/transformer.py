@@ -239,7 +239,10 @@ class DataTransformer:
         fact_key_counter = self.start_fact_key
 
         # Nhom cac item theo (store_id, order_id) de tao line_item_id
-        grouped_items = df_items_raw.groupby(["ma_cua_hang", "ma_don"])
+        if df_items_raw.empty or "ma_cua_hang" not in df_items_raw.columns or "ma_don" not in df_items_raw.columns:
+            grouped_items = []
+        else:
+            grouped_items = df_items_raw.groupby(["ma_cua_hang", "ma_don"])
 
         for (st_id, ord_id), items_group in grouped_items:
             # Kiem tra don hang nay co nam trong clean_orders khong
