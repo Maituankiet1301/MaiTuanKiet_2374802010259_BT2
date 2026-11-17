@@ -1,17 +1,26 @@
 version: "3.8"
 
 services:
-  mekong-dwh-dashboard:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: mekong_mobile_l6_app
+    container_name: mekong_mobile_l6_dwh
     ports:
       - "8501:8501"
     environment:
       - DB_TYPE=duckdb
       - DB_PATH=data/dwh_mekong.duckdb
       - STREAMLIT_PORT=8501
+      - APP_PORT=8501
+      - AUTH_SALT=mekong_crm_salt_2026_demo
+      - DATA_RAW_DIR=./data/raw
     volumes:
       - ./data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8501/_stcore/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     restart: unless-stopped

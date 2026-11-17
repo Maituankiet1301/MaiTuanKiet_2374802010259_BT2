@@ -1,4 +1,4 @@
-# BẢN GHI NHẬN THAY ĐỔI THIẾT KẾ (BT1 → BT2 → BUỔI 14)
+# BẢN GHI NHẬN THAY ĐỔI THIẾT KẾ (BT1 → BT2 → BUỔI 14 → BÀI TẬP 3)
 **Học phần:** Chuyên đề tốt nghiệp 1 – Học kỳ 1, Năm học 2026 – 2027  
 **Phân hệ / Luồng nghiệp vụ:** Luồng L6 – Kho dữ liệu bán hàng & Báo cáo doanh thu đa chiều (Smart CRM - Mekong Mobile)  
 **Sinh viên thực hiện:** Mai Tuấn Kiệt | **MSSV:** 2374802010259 | **Track:** Data Analytics (DA)  
@@ -77,3 +77,36 @@
 - **Thay đổi gì:** Bổ sung kiểm tra cấu trúc cột và dữ liệu rỗng cho `df_items_raw` trước khi thực hiện `groupby(["ma_cua_hang", "ma_don"])`; bổ sung định dạng ngày `%d-%m-%Y` vào hàm `parse_date_flexibly`.
 - **Vì sao:** Tránh lỗi `KeyError: 'ma_cua_hang'` khi nạp đơn hàng không có chi tiết; đồng thời hỗ trợ đầy đủ các định dạng ngày thực tế tại Việt Nam không bị từ chối oan.
 - **Ảnh hưởng tới thành phần nào:** Module `src/transform/transformer.py` và `src/quality/checker.py`.
+
+---
+
+## PHẦN C. ĐÓNG GÓI PROTOTYPE, KIỂM THỬ MÁY TRẮNG & TÀI LIỆU KỸ THUẬT (BÀI TẬP 3 - BUỔI 15 & 16)
+
+### THAY ĐỔI 9: Nâng cấp Dockerfile & docker-compose.yml có Healthcheck đạt chuẩn C1
+- **Thay đổi gì:** Bổ sung gói `curl` vào `Dockerfile`, thiết lập chỉ thị `HEALTHCHECK` kiểm tra định kỳ endpoint `http://localhost:8501/_stcore/health`; cấu hình `healthcheck` tương ứng trong `docker-compose.yml` với container name `mekong_mobile_l6_dwh`.
+- **Vì sao:** Đáp ứng tiêu chí cốt lõi C1 và kịch bản kiểm thử máy trắng của Giảng viên: `docker compose ps` phải hiển thị rõ trạng thái `(healthy)`, cho phép dựng lại toàn bộ hệ thống bằng $\le 2$ lệnh từ thư mục trống mà không cần can thiệp thủ công.
+- **Ảnh hưởng tới thành phần nào:** `Dockerfile`, `docker-compose.yml`, `docs/deployment-guide.md`.
+
+---
+
+### THAY ĐỔI 10: Xây dựng bộ Tài liệu kỹ thuật tiếng Anh hoàn chỉnh (Deployment Guide, Pipeline Doc, Data Dictionary)
+- **Thay đổi gì:** Biên soạn mới 3 tài liệu kỹ thuật chuyên sâu bằng tiếng Anh:
+  1. `docs/deployment-guide.md` đủ 5 mục (Requirements, Setup steps, Environment variables, Sample data, Verify it works) kèm hướng dẫn triển khai Cloud.
+  2. `docs/pipeline-doc.md` đủ 6 mục (Overview, Architecture, Ingestion, Quality rules, Idempotency, Known limitations & business impact).
+  3. `docs/data-dictionary.md` mô tả 100% cột của toàn bộ 8 bảng trong kho DuckDB, đối chiếu số liệu reject với lần chạy thực tế.
+- **Vì sao:** Đáp ứng tiêu chí C5, C9, D1, D2, D3, D4 của đề bài BT3 và tiêu chuẩn báo cáo kỹ thuật quốc tế cho chuyên ngành Kỹ thuật Dữ liệu (Track DA).
+- **Ảnh hưởng tới thành phần nào:** Thư mục `docs/`, file PDF báo cáo chính thức `BT3_2374802010259_MaiTuanKiet.pdf`.
+
+---
+
+### THAY ĐỔI 11: Chuẩn hóa Checklist bảo mật 7 tiêu chí OWASP Top 10:2025 và An toàn PII
+- **Thay đổi gì:** Xây dựng `docs/checklist-bao-mat.md` gồm 7 mục bảo mật: A01 (Access Control), A02 (Security Misconfiguration), A04 (Cryptographic Failures), A05 (Injection), A07 (Authentication), Bảo vệ dữ liệu cá nhân PII (D4), và Quản lý Secret (C7); mỗi mục đều có dòng minh chứng thực tế cụ thể.
+- **Vì sao:** Đảm bảo hệ thống đạt chuẩn an toàn thông tin khi public repository, tuân thủ Luật Bảo vệ dữ liệu cá nhân và đáp ứng tiêu chí C6, C7 của BT3.
+- **Ảnh hưởng tới thành phần nào:** `docs/checklist-bao-mat.md`, `app.py`, `src/transform/transformer.py`.
+
+---
+
+### THAY ĐỔI 12: Đóng gói và phát hành bản nộp bài chính thức Tag `v1.0`
+- **Thay đổi gì:** Tạo tag có chú thích `v1.0` trên kho GitHub công khai, tổng hợp toàn bộ 6 thành phần của đồ án vào một file PDF duy nhất `BT3_2374802010259_MaiTuanKiet.pdf` kèm phụ lục khai báo AI giai đoạn 3.
+- **Vì sao:** Hoàn tất toàn bộ yêu cầu nghiệm thu Bài tập 3 của học phần Chuyên đề tốt nghiệp 1 trước thời hạn kết thúc Buổi 16.
+- **Ảnh hưởng tới thành phần nào:** Git tags, GitHub Releases, `README.md`, file PDF nộp VLU E-learning.

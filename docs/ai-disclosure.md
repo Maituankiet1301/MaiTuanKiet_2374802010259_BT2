@@ -1,5 +1,5 @@
-# PHỤ LỤC: BẢNG KHAI BÁO SỬ DỤNG CÔNG CỤ AI (BÀI TẬP 2)
-*(Bắt buộc đính kèm theo quy định học phần Chuyên đề tốt nghiệp 1 – Bài tập 2)*
+# PHỤ LỤC: BẢNG KHAI BÁO SỬ DỤNG CÔNG CỤ AI (BÀI TẬP 3 - GIAI ĐOẠN 3)
+*(Bắt buộc đính kèm theo quy định học phần Chuyên đề tốt nghiệp 1 – Bài tập 3)*
 
 **Học phần:** Chuyên đề tốt nghiệp 1 – Học kỳ 1, Năm học 2026 – 2027  
 **Sinh viên thực hiện:** Mai Tuấn Kiệt  
@@ -7,17 +7,18 @@
 **Track:** Data Analytics (DA)  
 **Luồng bài tập:** Luồng L6 – Kho dữ liệu bán hàng & Báo cáo doanh thu đa chiều  
 **Case Study:** Mekong Mobile Smart CRM  
+**Tag nộp bài:** `v1.0` | **Kho GitHub công khai:** [https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2](https://github.com/Maituankiet1301/MaiTuanKiet_2374802010259_BT2)
 
 ---
 
-### BẢNG KHAI BÁO CHI TIẾT SỬ DỤNG CÔNG CỤ AI CHO BÀI TẬP 2
+### BẢNG KHAI BÁO CHI TIẾT SỬ DỤNG CÔNG CỤ AI CHO GIAI ĐOẠN 3 (BÀI TẬP 3)
 
 | Công cụ AI | Dùng vào việc gì cụ thể | Áp dụng ở tệp / hàm nào | Em đã kiểm chứng thế nào? |
 | :--- | :--- | :--- | :--- |
-| **Claude / ChatGPT / Antigravity AI** | Gợi ý cấu trúc giải thuật nạp idempotent trong DuckDB bằng chiến lược Delete/Insert theo bộ ba khóa tự nhiên. | `src/load/loader.py`, hàm `load_fact_sales` và `load_dimensions` | Đọc tài liệu chính thức của DuckDB về giao dịch ACID; viết kịch bản kiểm thử `test_case_4_idempotent_double_run` trong `tests/test_pipeline.py`; chạy pipeline 2 lần liên tiếp và truy vấn `COUNT(*)` để xác minh số dòng không bị nhân đôi. |
-| **Claude / ChatGPT / Antigravity AI** | Gợi ý biểu thức chính quy (Regex) và thứ tự ưu tiên parse 3 định dạng ngày tháng thực tế (`%d/%m/%Y`, `%d-%m-%y`, `%Y.%m.%d`). | `src/quality/checker.py`, hàm `parse_date_flexibly` và `clean_phone_str` | Viết unit test cho các định dạng ngày biên (ngày đầu năm 2020, ngày nhuận 29/02/2024, ngày sai 31/02/2025); chạy trên tập 2.058 đơn hàng thực tế để kiểm tra tỷ lệ thành công. |
-| **Claude / ChatGPT / Antigravity AI** | Gợi ý mẫu layout 3 trạng thái (Loading, Empty, Error) và cấu hình theme Plotly cho Streamlit. | `app.py`, các khối `st.spinner`, kiểm tra `df_filtered.empty` và khối `try...except` kết nối CSDL | Tự tạo 2 checkbox toggle trên Sidebar: *"🔴 Giả lập Lỗi kết nối CSDL"* và *"🟡 Giả lập Bộ lọc rỗng"* để kích hoạt và kiểm tra trực quan giao diện ứng xử đúng theo rubric chấm điểm; đảm bảo chuỗi kết nối tuyệt đối không bị lộ. |
-| **— Không dùng — (Tự làm hoàn toàn)** | Thiết kế kiến trúc phân lớp `extract / transform / quality / load`; xây dựng 6 hàm đo lường chất lượng dữ liệu; thiết kế lược đồ Star Schema chuẩn Kimball; lập luận nghiệp vụ phân tích câu hỏi CH1, CH2, CH4. | Toàn bộ cấu trúc dự án `src/`, file `sql/schema.sql`, kịch bản sinh dữ liệu mẫu `seeds/generate_seeds.py` | Tự thiết kế và đối chiếu trực tiếp với Hồ sơ Bài tập 1 đã nộp; tự viết toàn bộ câu truy vấn phân tích SQL sụt giảm 3 tháng liên tiếp (`LAG window function`) và chạy kiểm thử pytest đạt 100% PASS. |
+| **Claude / ChatGPT / Antigravity AI** | Hỗ trợ rà soát cấu trúc Dockerfile tối ưu kích thước image và cú pháp directive `HEALTHCHECK` kiểm tra trạng thái Streamlit. | `Dockerfile`, `docker-compose.yml` | Kiểm tra cú pháp theo chuẩn Docker Reference; tự xây dựng container và đối chiếu lệnh kiểm tra healthcheck `curl -f http://localhost:8501/_stcore/health` trả về mã 200 OK. |
+| **Claude / ChatGPT / Antigravity AI** | Gợi ý cấu trúc dàn ý chuẩn tiếng Anh cho tài liệu kỹ thuật chuyên ngành Kỹ thuật dữ liệu (Pipeline Doc 6 mục, Data Dictionary, Deployment Guide 5 mục). | `docs/deployment-guide.md`, `docs/pipeline-doc.md`, `docs/data-dictionary.md` | Tự rà soát và đối chiếu từng bảng, từng cột với lược đồ thật trong CSDL DuckDB (`DESCRIBE table`); tính toán số dòng reject (5 orders, 1 item) khớp 100% với nhật ký chạy thực tế. |
+| **Claude / ChatGPT / Antigravity AI** | Gợi ý bố cục CSS in ấn `@page` và cấu trúc Flexbox hiện đại để xuất file PDF báo cáo chuẩn A4 không bị vỡ bảng hay tràn trang. | `ho_so_bt3/build_bt3_pdf.ps1`, `ho_so_bt3/HO_SO_BT3_HOAN_CHINH.html` | Chạy lệnh xuất PDF bằng Google Chrome headless; mở kiểm tra từng trang trên trình đọc PDF để xác nhận căn lề, số trang, ngắt dòng và độ sắc nét của hình ảnh minh chứng. |
+| **— Không dùng — (Tự làm hoàn toàn)** | Hiện thực hóa toàn bộ mã nguồn pipeline ETL (`src/extract`, `src/transform`, `src/load`, `src/quality`); thiết kế 12 test case chuyên sâu; phân tích 5 bug log thực tế; lập luận nghiệp vụ về tác động của các bản ghi reject. | Toàn bộ module `src/`, tệp `tests/test_pipeline.py`, `docs/bug-log.md`, `docs/test-plan.md`, `docs/test-report.md` | Tự chạy toàn bộ kiểm thử `pytest -v` đạt 12/12 PASS (100%); kiểm tra tính idempotent nạp lại lần 2 bằng chính xác 3.144 dòng; tự điều tra nguyên nhân gốc rễ và commit sửa từng bug. |
 
 ---
 
@@ -27,4 +28,4 @@
 
 - **Họ và tên sinh viên:** Mai Tuấn Kiệt  
 - **Mã số sinh viên (MSSV):** 2374802010259  
-- **Ngày khai báo:** 05/11/2026  
+- **Ngày khai báo:** 17/11/2026  
